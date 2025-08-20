@@ -1,9 +1,10 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
+import { Text } from "@/modules/core/components/ui/text";
 
 export default function ScannerScreen() {
   return (
     <View>
-      <Text>Scanner Screen</Text>
+      <Text variant="h3">Scanner Screen</Text>
     </View>
   );
 }
