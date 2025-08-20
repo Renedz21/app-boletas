@@ -22,7 +22,34 @@ interface StatCardProps {
     isPositive: boolean;
   };
 }
+const colorClasses = {
+  primary: {
+    bg: "bg-blue-50",
+    border: "border-blue-200",
+    text: "text-blue-600",
+    iconBg: "bg-blue-100",
+  },
+  secondary: {
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    text: "text-purple-600",
+    iconBg: "bg-purple-100",
+  },
+  accent: {
+    bg: "bg-teal-50",
+    border: "border-teal-200",
+    text: "text-teal-600",
+    iconBg: "bg-teal-100",
+  },
+  warning: {
+    bg: "bg-amber-50",
+    border: "border-amber-200",
+    text: "text-amber-600",
+    iconBg: "bg-amber-100",
+  },
+};
 
+// Tarjeta compacta de estadísticas
 const StatCard = ({
   title,
   value,
@@ -31,62 +58,48 @@ const StatCard = ({
   color,
   trend,
 }: StatCardProps) => {
-  const colorClasses = {
-    primary: {
-      bg: "bg-blue-50",
-      border: "border-blue-100",
-      text: "text-blue-600",
-    },
-    secondary: {
-      bg: "bg-purple-50",
-      border: "border-purple-100",
-      text: "text-purple-600",
-    },
-    accent: {
-      bg: "bg-teal-50",
-      border: "border-teal-100",
-      text: "text-teal-600",
-    },
-    warning: {
-      bg: "bg-amber-50",
-      border: "border-amber-100",
-      text: "text-amber-600",
-    },
-  };
-
   const config = colorClasses[color];
 
   return (
-    <Card className={cn("shadow-sm", config.border)}>
-      <CardContent className="p-4">
-        <View className="mb-2 flex-row items-start justify-between">
-          <View className={cn("rounded-lg p-2", config.bg)}>{icon}</View>
+    <Card className={cn("border bg-white", config.border)}>
+      <CardContent className="p-3">
+        <View className="mb-2 flex-row items-center justify-between">
+          <View className={cn("rounded-lg p-1.5", config.iconBg)}>{icon}</View>
           {trend && (
-            <View className="flex-row items-center">
-              <Text
-                variant="small"
-                className={cn(
-                  "font-semibold",
-                  trend.isPositive ? "text-green-600" : "text-red-600",
-                )}
-              >
-                {trend.isPositive ? "+" : "-"}
-                {Math.abs(trend.value)}%
-              </Text>
-            </View>
+            <Text
+              variant="small"
+              className={cn(
+                "text-[11px] font-semibold",
+                trend.isPositive ? "text-green-600" : "text-red-600",
+              )}
+            >
+              {trend.isPositive ? "+" : "-"}
+              {Math.abs(trend.value)}%
+            </Text>
           )}
         </View>
 
-        <Text variant="h3" className={cn("mb-0.5", config.text)}>
+        <Text
+          variant="h4"
+          className={cn("mb-1 text-xl font-bold", config.text)}
+        >
           {value}
         </Text>
 
-        <Text variant="caption" color="secondary">
+        <Text
+          variant="caption"
+          color="secondary"
+          className="text-[11px] text-gray-600"
+        >
           {title}
         </Text>
 
         {subtitle && (
-          <Text variant="small" color="tertiary" className="mt-1">
+          <Text
+            variant="caption"
+            color="tertiary"
+            className="mt-0.5 text-[10px] text-gray-500"
+          >
             {subtitle}
           </Text>
         )}
@@ -110,54 +123,40 @@ interface BoletasStatsProps {
 
 export const BoletasStats = ({ stats }: BoletasStatsProps) => {
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      className="px-4 pb-2"
-    >
+    <View className="px-4 py-3">
       <View className="flex-row gap-3">
-        <View className="w-40">
+        <View className="w-36">
           <StatCard
             title="Total Gastado"
             value={formatCurrency(stats.totalAmount)}
             subtitle="Este mes"
-            icon={<DollarSignIcon size={20} color="#3B82F6" />}
+            icon={<DollarSignIcon size={16} color="#2563EB" />}
             color="primary"
             trend={stats.trends?.amount}
           />
         </View>
 
-        <View className="w-40">
+        <View className="w-36">
           <StatCard
             title="Total Boletas"
             value={stats.totalCount}
             subtitle="Registradas"
-            icon={<FileTextIcon size={20} color="#A855F7" />}
+            icon={<FileTextIcon size={16} color="#9333EA" />}
             color="secondary"
             trend={stats.trends?.count}
           />
         </View>
 
-        <View className="w-40">
+        <View className="w-36">
           <StatCard
             title="Promedio"
             value={formatCurrency(stats.averageAmount)}
             subtitle="Por boleta"
-            icon={<TrendingUpIcon size={20} color="#14B8A6" />}
+            icon={<TrendingUpIcon size={16} color="#0D9488" />}
             color="accent"
           />
         </View>
-
-        <View className="w-40">
-          <StatCard
-            title="Este Mes"
-            value={stats.monthlyCount}
-            subtitle="Nuevas boletas"
-            icon={<CalendarDaysIcon size={20} color="#F59E0B" />}
-            color="warning"
-          />
-        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };

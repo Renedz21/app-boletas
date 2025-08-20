@@ -5,12 +5,11 @@ import { Card, CardContent } from "@/modules/core/components/ui/card";
 import { Text } from "@/modules/core/components/ui/text";
 import { Badge } from "@/modules/core/components/ui/badge";
 import { IconButton } from "@/modules/core/components/ui/icon-button";
-import { Boleta } from "../types/boleta.types";
+import { Boleta } from "@/types/boleta.types";
 import {
   CATEGORIES_CONFIG,
   formatCurrency,
   formatDate,
-  getStatusConfig,
 } from "../constants/mock-data";
 import { cn } from "@/lib/utils";
 
@@ -25,117 +24,185 @@ export const BoletaCard = ({
   onPress,
   onMenuPress,
 }: BoletaCardProps) => {
-  const categoryConfig = CATEGORIES_CONFIG[boleta.category];
-  const statusConfig = getStatusConfig(boleta.status);
+  const categoryConfig = CATEGORIES_CONFIG.find(
+    (cat) => cat.id === boleta.categoria_id,
+  );
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-      <Card className="mb-3 border-gray-100 shadow-sm">
-        <CardContent className="p-4">
+      <Card className="overflow-hidden border-gray-200 bg-white shadow-sm">
+        <CardContent className="p-0">
           {/* Header con título y menú */}
-          <View className="mb-3 flex-row items-start justify-between">
-            <View className="mr-2 flex-1">
-              <View className="mb-1 flex-row items-center">
-                <Text variant="h1" className="mr-2">
-                  {categoryConfig.icon}
+          <View className="p-4 pb-3">
+            <View className="flex-row items-start justify-between">
+              <View className="mr-3 flex-1">
+                <Text variant="h4" className="mb-1">
+                  {boleta.razon_social}
                 </Text>
-                <View className="flex-1">
-                  <Text variant="h4" className="mb-0.5">
-                    {boleta.title}
-                  </Text>
-                  <Text variant="caption" color="secondary">
-                    {boleta.merchant}
-                  </Text>
-                </View>
+                <Text variant="caption" color="secondary">
+                  RUC: {boleta.ruc}
+                </Text>
               </View>
-            </View>
 
-            {onMenuPress && (
-              <IconButton
-                variant="ghost"
-                size="sm"
-                onPress={(e) => {
-                  e.stopPropagation();
-                  onMenuPress();
-                }}
-              >
-                <MoreVerticalIcon size={20} color="#64748B" />
-              </IconButton>
-            )}
+              {onMenuPress && (
+                <IconButton
+                  variant="ghost"
+                  size="sm"
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    onMenuPress();
+                  }}
+                  className="ml-2"
+                >
+                  <MoreVerticalIcon size={18} color="#64748B" />
+                </IconButton>
+              )}
+            </View>
           </View>
 
           {/* Monto y fecha */}
-          <View className="mb-3 flex-row items-center justify-between">
-            <Text variant="h3" className="text-primary-600">
-              {formatCurrency(boleta.amount)}
-            </Text>
-            <Text variant="small" color="tertiary">
-              {formatDate(boleta.date)}
-            </Text>
+          <View className="px-4 pb-4">
+            <View className="flex-row items-center justify-between">
+              <Text
+                variant="h3"
+                className="text-2xl font-bold text-primary-600"
+              >
+                {formatCurrency(boleta.total)}
+              </Text>
+              <Text
+                variant="small"
+                color="tertiary"
+                className="font-medium text-gray-500"
+              >
+                {formatDate(boleta.fecha)}
+              </Text>
+            </View>
           </View>
 
           {/* Badges de categoría y estado */}
-          <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center gap-2">
+          <View className="px-4 pb-4">
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center gap-2">
+                {categoryConfig && (
+                  <Badge
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      "border-2 px-3 py-1.5",
+                      categoryConfig.esDeducible
+                        ? "border-emerald-200 bg-emerald-50"
+                        : "border-blue-200 bg-blue-50",
+                    )}
+                    textClassName={cn(
+                      "font-semibold text-sm",
+                      categoryConfig.esDeducible
+                        ? "text-emerald-700"
+                        : "text-blue-700",
+                    )}
+                  >
+                    <View className="flex-row items-center">
+                      <Text variant="small" className="mr-1.5 text-base">
+                        {categoryConfig.esDeducible ? "💰" : "📋"}
+                      </Text>
+                      <Text variant="small" className="font-semibold">
+                        {categoryConfig.nombre}
+                      </Text>
+                    </View>
+                  </Badge>
+                )}
+                {boleta.subcategoria && (
+                  <Badge
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-purple-200 bg-purple-50 px-3 py-1.5"
+                    textClassName="text-purple-700 font-semibold text-sm"
+                  >
+                    <Text variant="small" className="font-semibold">
+                      {boleta.subcategoria}
+                    </Text>
+                  </Badge>
+                )}
+              </View>
+
               <Badge
                 variant="outline"
                 size="sm"
                 className={cn(
-                  categoryConfig.bgColor,
-                  categoryConfig.borderColor,
+                  "border-2 px-3 py-1.5",
+                  boleta.revisado_manualmente
+                    ? "border-green-200 bg-green-50"
+                    : "border-amber-200 bg-amber-50",
                 )}
-                textClassName={`text-[${categoryConfig.color}]`}
+                textClassName={cn(
+                  "font-semibold text-sm",
+                  boleta.revisado_manualmente
+                    ? "text-green-700"
+                    : "text-amber-700",
+                )}
               >
-                {categoryConfig.label}
+                <View className="flex-row items-center">
+                  <Text variant="small" className="mr-1.5 text-base">
+                    {boleta.revisado_manualmente ? "✅" : "⏳"}
+                  </Text>
+                  <Text variant="small" className="font-semibold">
+                    {boleta.revisado_manualmente ? "Revisado" : "Pendiente"}
+                  </Text>
+                </View>
               </Badge>
             </View>
-
-            <Badge
-              variant="outline"
-              size="sm"
-              className={cn(statusConfig.bgColor, statusConfig.borderColor)}
-              textClassName={`text-[${statusConfig.color}]`}
-            >
-              <View className="flex-row items-center">
-                <Text variant="small" className="mr-1">
-                  {statusConfig.icon}
-                </Text>
-                <Text
-                  variant="small"
-                  className="font-medium"
-                  style={{ color: statusConfig.color }}
-                >
-                  {statusConfig.label}
-                </Text>
-              </View>
-            </Badge>
           </View>
 
-          {/* Descripción opcional */}
-          {boleta.description && (
-            <View className="mt-3 border-t border-gray-100 pt-3">
-              <Text variant="caption" color="secondary" numberOfLines={2}>
-                {boleta.description}
-              </Text>
-            </View>
-          )}
-
-          {/* Tags opcionales */}
-          {boleta.tags && boleta.tags.length > 0 && (
-            <View className="mt-2 flex-row flex-wrap gap-1">
-              {boleta.tags.map((tag, index) => (
-                <Badge
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  className="border-gray-200 bg-gray-50"
-                  textClassName="text-gray-600"
-                >
-                  <Text variant="small" color="secondary">
-                    #{tag}
+          {/* Información adicional */}
+          {(boleta.notas || boleta.tags?.length) && (
+            <View className="border-t border-gray-100 bg-gray-50 px-4 py-3">
+              {/* Notas opcionales */}
+              {boleta.notas && (
+                <View className="mb-3">
+                  <Text
+                    variant="caption"
+                    color="secondary"
+                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-600"
+                  >
+                    Notas
                   </Text>
-                </Badge>
-              ))}
+                  <Text
+                    variant="body"
+                    color="secondary"
+                    numberOfLines={2}
+                    className="text-sm leading-5 text-gray-700"
+                  >
+                    {boleta.notas}
+                  </Text>
+                </View>
+              )}
+
+              {/* Tags opcionales */}
+              {boleta.tags && boleta.tags.length > 0 && (
+                <View>
+                  <Text
+                    variant="caption"
+                    color="secondary"
+                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-600"
+                  >
+                    Etiquetas
+                  </Text>
+                  <View className="flex-row flex-wrap gap-2">
+                    {boleta.tags.map((tag, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        size="sm"
+                        className="border-indigo-200 bg-indigo-50 px-2 py-1"
+                        textClassName="text-indigo-700 text-xs font-medium"
+                      >
+                        <Text variant="small" className="text-xs font-medium">
+                          #{tag}
+                        </Text>
+                      </Badge>
+                    ))}
+                  </View>
+                </View>
+              )}
             </View>
           )}
         </CardContent>

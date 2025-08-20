@@ -8,7 +8,7 @@ import {
 import { BoletaCard } from "./boleta-card";
 import { BoletasEmptyState } from "./boletas-empty-state";
 import { Text } from "@/modules/core/components/ui/text";
-import { Boleta } from "../types/boleta.types";
+import { Boleta } from "@/types/boleta.types";
 
 interface BoletasListProps {
   boletas: Boleta[];

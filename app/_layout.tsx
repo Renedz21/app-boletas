@@ -5,6 +5,7 @@ import {
 } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import "../global.css";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function InitialLayout() {
   return (
@@ -20,8 +21,10 @@ function InitialLayout() {
 
 export default function RootLayout() {
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <InitialLayout />
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <InitialLayout />
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

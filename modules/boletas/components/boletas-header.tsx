@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { FilterIcon, SlidersIcon } from "lucide-react-native";
+import {
+  SlidersHorizontalIcon,
+  SearchIcon,
+  XIcon,
+  SparklesIcon,
+} from "lucide-react-native";
 import { SearchBar } from "@/modules/core/components/ui/search-bar";
 import { Text } from "@/modules/core/components/ui/text";
-import { IconButton } from "@/modules/core/components/ui/icon-button";
 import { Badge } from "@/modules/core/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -26,84 +30,104 @@ export const BoletasHeader = ({
   activeFiltersCount = 0,
   showFiltersButton = true,
 }: BoletasHeaderProps) => {
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const isFiltered = filteredCount !== totalCount || searchQuery.length > 0;
 
   return (
-    <View className="border-b border-gray-100 bg-white px-4 py-3">
-      {/* Barra de búsqueda con botón de filtros */}
-      <View className="mb-3 flex-row items-center gap-3">
-        <View className="flex-1">
-          <SearchBar
-            value={searchQuery}
-            onChangeText={onSearchChange}
-            placeholder="Buscar boletas..."
-            containerClassName="bg-gray-50 border-gray-200"
-            onClear={() => onSearchChange("")}
-          />
-        </View>
+    <View className="bg-white">
+      <View className="px-4 py-4">
+        {/* Search and filter section */}
+        <View className="mb-4 flex-row items-center gap-3">
+          <View className="flex-1">
+            <SearchBar
+              value={searchQuery}
+              onChangeText={onSearchChange}
+              placeholder="Buscar boletas..."
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+              className="border-gray-200 bg-gray-50"
+            />
+          </View>
 
-        {showFiltersButton && (
-          <TouchableOpacity
-            onPress={onFilterPress}
-            className="relative"
-            activeOpacity={0.7}
-          >
-            <View
+          {showFiltersButton && (
+            <TouchableOpacity
+              onPress={onFilterPress}
+              activeOpacity={0.7}
               className={cn(
-                "h-12 w-12 items-center justify-center rounded-xl",
+                "flex-row items-center justify-center rounded-lg border-2 px-4 py-3 transition-all",
                 activeFiltersCount > 0
-                  ? "border-2 border-primary-200 bg-primary-100"
-                  : "border border-gray-200 bg-gray-50",
+                  ? "border-primary-500 bg-primary-50"
+                  : "border-gray-200 bg-white hover:border-gray-300",
               )}
             >
-              <SlidersIcon
-                size={20}
+              <SlidersHorizontalIcon
+                size={18}
                 color={activeFiltersCount > 0 ? "#3B82F6" : "#6B7280"}
               />
-            </View>
-
-            {/* Indicador de filtros activos */}
-            {activeFiltersCount > 0 && (
-              <View className="absolute -right-1 -top-1 h-5 w-5 items-center justify-center rounded-full bg-primary-500">
-                <Text variant="small" className="font-bold text-white">
-                  {activeFiltersCount}
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {/* Contador de resultados */}
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center">
-          <Text variant="body" color="secondary">
-            Mostrando{" "}
-          </Text>
-          <Text variant="body" className="font-semibold text-primary-600">
-            {filteredCount}
-          </Text>
-          <Text variant="body" color="secondary">
-            {" "}
-            de {totalCount} boletas
-          </Text>
+              <Text
+                variant="body"
+                className={cn(
+                  "ml-2 text-sm font-semibold",
+                  activeFiltersCount > 0 ? "text-primary-600" : "text-gray-600",
+                )}
+              >
+                Filtros
+              </Text>
+              {activeFiltersCount > 0 && (
+                <Badge
+                  variant="default"
+                  size="sm"
+                  className="ml-2 bg-primary-500"
+                  textClassName="text-white text-xs font-bold"
+                >
+                  <Text variant="small" className="text-white text-xs font-bold">
+                    {activeFiltersCount}
+                  </Text>
+                </Badge>
+              )}
+            </TouchableOpacity>
+          )}
         </View>
 
-        {/* Indicador de búsqueda activa */}
-        {isFiltered && (
-          <Badge
-            variant="outline"
-            size="sm"
-            className="border-blue-200 bg-blue-50"
-          >
-            <View className="flex-row items-center">
-              <FilterIcon size={12} color="#3B82F6" />
-              <Text variant="small" className="ml-1 font-medium text-blue-600">
-                Filtrado
-              </Text>
+        {/* Results summary */}
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <Text variant="body" className="text-sm font-medium text-gray-600">
+              Mostrando {filteredCount} de {totalCount} boletas
+            </Text>
+
+            {isFiltered && (
+              <TouchableOpacity
+                onPress={() => {
+                  onSearchChange("");
+                  // Reset other filters if needed
+                }}
+                activeOpacity={0.7}
+                className="flex-row items-center gap-1"
+              >
+                <XIcon size={14} color="#6B7280" />
+                <Text variant="caption" className="text-xs text-gray-500">
+                  Limpiar búsqueda
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Quick stats */}
+          {filteredCount > 0 && (
+            <View className="flex-row items-center gap-2">
+              <View className="flex-row items-center gap-1 rounded-full bg-green-50 px-2 py-1">
+                <SparklesIcon size={12} color="#059669" />
+                <Text
+                  variant="caption"
+                  className="text-xs font-medium text-green-700"
+                >
+                  {Math.round((filteredCount / totalCount) * 100)}% encontrado
+                </Text>
+              </View>
             </View>
-          </Badge>
-        )}
+          )}
+        </View>
       </View>
     </View>
   );

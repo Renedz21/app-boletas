@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { FileTextIcon, PlusIcon } from "lucide-react-native";
+import { FileTextIcon, PlusIcon, SparklesIcon } from "lucide-react-native";
 import { Text } from "@/modules/core/components/ui/text";
 import { Button } from "@/modules/core/components/ui/button";
 
@@ -10,38 +10,65 @@ interface BoletasEmptyStateProps {
 
 export const BoletasEmptyState = ({ onAddPress }: BoletasEmptyStateProps) => {
   return (
-    <View className="flex-1 items-center justify-center px-6 py-12">
-      {/* Icono grande con fondo pastel */}
-      <View className="w-32 h-32 bg-primary-50 rounded-full items-center justify-center mb-6">
-        <FileTextIcon size={64} color="#3B82F6" strokeWidth={1.5} />
+    <View className="flex-1 items-center justify-center px-8 py-16">
+      {/* Icono principal con fondo degradado */}
+      <View className="mb-8 h-28 w-28 items-center justify-center rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-100 shadow-sm">
+        <FileTextIcon size={48} color="#3B82F6" strokeWidth={1.5} />
       </View>
 
-      {/* Mensajes */}
-      <Text variant="h3" className="text-center mb-2">
+      {/* Mensajes principales */}
+      <Text
+        variant="h3"
+        className="mb-3 text-center text-xl font-bold text-gray-900"
+      >
         Sin boletas aún
       </Text>
-      <Text variant="body" color="secondary" className="text-center mb-8 max-w-xs">
-        Comienza agregando tu primera boleta para llevar un control de tus gastos
+      <Text
+        variant="body"
+        color="secondary"
+        className="mb-8 max-w-sm text-center leading-6 text-gray-600"
+      >
+        Comienza agregando tu primera boleta para llevar un control detallado de
+        tus gastos y compras
       </Text>
 
-      {/* Botón de acción */}
+      {/* Botón de acción principal */}
       {onAddPress && (
         <Button
           variant="primary"
           size="lg"
           onPress={onAddPress}
-          className="flex-row items-center px-6"
+          className="flex-row items-center rounded-xl px-8 py-4 shadow-md"
         >
           <PlusIcon size={20} color="#FFFFFF" className="mr-2" />
-          <Text variant="body" className="text-white font-medium">Agregar Boleta</Text>
+          <Text variant="body" className="text-base font-semibold text-white">
+            Agregar Primera Boleta
+          </Text>
         </Button>
       )}
 
-      {/* Ilustración decorativa con círculos pastel */}
+      {/* Información adicional */}
+      <View className="mt-8 max-w-sm rounded-xl border border-gray-200 bg-gray-50 p-4">
+        <View className="mb-2 flex-row items-center">
+          <SparklesIcon size={16} color="#6B7280" className="mr-2" />
+          <Text
+            variant="caption"
+            className="text-xs font-medium uppercase tracking-wide text-gray-600"
+          >
+            Consejo
+          </Text>
+        </View>
+        <Text variant="small" className="text-xs leading-5 text-gray-600">
+          Escanea tus comprobantes físicos o súbelos desde tu galería para
+          comenzar a organizar tus finanzas
+        </Text>
+      </View>
+
+      {/* Elementos decorativos sutiles */}
       <View className="absolute -z-10">
-        <View className="absolute -top-20 -left-20 w-40 h-40 bg-purple-100 rounded-full opacity-30" />
-        <View className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-100 rounded-full opacity-30" />
-        <View className="absolute top-40 right-20 w-24 h-24 bg-teal-100 rounded-full opacity-30" />
+        <View className="absolute -left-16 -top-16 h-32 w-32 rounded-full bg-blue-100 opacity-20" />
+        <View className="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-purple-100 opacity-20" />
+        <View className="absolute right-16 top-32 h-20 w-20 rounded-full bg-indigo-100 opacity-20" />
       </View>
     </View>
   );
