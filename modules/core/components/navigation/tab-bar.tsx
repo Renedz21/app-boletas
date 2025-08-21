@@ -15,7 +15,7 @@ const TabBar = ({ state, descriptors, navigation }: TabBarProps) => {
 
   return (
     <View
-      className="border-t border-border bg-surface"
+      className="border-primary-border bg-neutral-default border-t"
       style={{ paddingBottom: insets.bottom }}
     >
       <View className="flex-row px-4 py-2">
@@ -76,10 +76,12 @@ const TabBar = ({ state, descriptors, navigation }: TabBarProps) => {
                   />
                 )}
                 <Text
-                  variant="small"
+                  size="default"
                   className={cn(
-                    "mt-1 font-medium",
-                    isFocused ? "text-primary-600" : "text-text-tertiary",
+                    "mt-1",
+                    isFocused
+                      ? "text-primary-default"
+                      : "text-neutral-placeholder",
                   )}
                 >
                   {label}

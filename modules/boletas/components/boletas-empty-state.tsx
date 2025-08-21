@@ -17,14 +17,11 @@ export const BoletasEmptyState = ({ onAddPress }: BoletasEmptyStateProps) => {
       </View>
 
       {/* Mensajes principales */}
-      <Text
-        variant="h3"
-        className="mb-3 text-center text-xl font-bold text-gray-900"
-      >
+      <Text className="mb-3 text-center text-xl font-bold text-gray-900">
         Sin boletas aún
       </Text>
       <Text
-        variant="body"
+        size="default"
         color="secondary"
         className="mb-8 max-w-sm text-center leading-6 text-gray-600"
       >
@@ -36,29 +33,23 @@ export const BoletasEmptyState = ({ onAddPress }: BoletasEmptyStateProps) => {
       {onAddPress && (
         <Button
           variant="primary"
-          size="lg"
           onPress={onAddPress}
-          className="flex-row items-center rounded-xl px-8 py-4 shadow-md"
-        >
-          <PlusIcon size={20} color="#FFFFFF" className="mr-2" />
-          <Text variant="body" className="text-base font-semibold text-white">
-            Agregar Primera Boleta
-          </Text>
-        </Button>
+          title="Agregar Primera Boleta"
+        />
       )}
 
       {/* Información adicional */}
       <View className="mt-8 max-w-sm rounded-xl border border-gray-200 bg-gray-50 p-4">
-        <View className="mb-2 flex-row items-center">
+        <View className="mb-2 flex-row items-center gap-2">
           <SparklesIcon size={16} color="#6B7280" className="mr-2" />
           <Text
-            variant="caption"
+            size="default"
             className="text-xs font-medium uppercase tracking-wide text-gray-600"
           >
             Consejo
           </Text>
         </View>
-        <Text variant="small" className="text-xs leading-5 text-gray-600">
+        <Text size="default" className="text-xs leading-5 text-gray-600">
           Escanea tus comprobantes físicos o súbelos desde tu galería para
           comenzar a organizar tus finanzas
         </Text>

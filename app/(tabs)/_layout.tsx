@@ -25,15 +25,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="scanner"
-        options={{
-          title: "Escanear",
-          tabBarIcon: ({ color }) => (
-            <CameraIcon width={22} height={22} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="tickets"
         options={{
           title: "Boletas",

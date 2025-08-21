@@ -22,13 +22,13 @@ export const FloatingActionButton = ({
 }: FloatingActionButtonProps) => {
   const sizeClasses = {
     md: "w-14 h-14",
-    lg: "w-16 h-16",
+    lg: "w-20 h-20",
   };
 
   const positionClasses = {
     "bottom-right": "bottom-6 right-6",
     "bottom-left": "bottom-6 left-6",
-    "bottom-center": "bottom-6 left-1/2 -translate-x-1/2",
+    "bottom-center": "bottom-6 left-1/2 -translate-x-1/2 z-50",
   };
 
   const iconSize = size === "lg" ? 28 : 24;
@@ -37,11 +37,7 @@ export const FloatingActionButton = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      className={cn(
-        "absolute z-50",
-        positionClasses[position],
-        className
-      )}
+      className={cn("absolute z-50", positionClasses[position], className)}
       style={[
         {
           elevation: 8,
@@ -56,7 +52,7 @@ export const FloatingActionButton = ({
       <View
         className={cn(
           sizeClasses[size],
-          "bg-primary-500 rounded-full items-center justify-center"
+          "bg-primary-default items-center justify-center rounded-full",
         )}
       >
         {icon || <PlusIcon size={iconSize} color="#FFFFFF" strokeWidth={2.5} />}

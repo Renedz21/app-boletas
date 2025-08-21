@@ -29,7 +29,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "La aplicación de boletas necesita acceso a tu cámara."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

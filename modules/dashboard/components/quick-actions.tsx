@@ -18,22 +18,22 @@ interface QuickActionsProps {
 
 export const QuickActions = ({ actions, columns = 4 }: QuickActionsProps) => {
   const colorClasses = {
-    primary: "bg-primary-50",
-    secondary: "bg-secondary-50",
+    primary: "bg-primary-soft",
+    secondary: "bg-secondary-soft",
     accent: "bg-accent-50",
     success: "bg-success-50",
   };
 
   return (
-    <View className="flex-row flex-wrap -mx-2">
+    <View className="-mx-2 flex-row flex-wrap">
       {actions.map((action) => (
         <View
           key={action.id}
           className={cn(
-            "px-2 mb-4",
+            "mb-4 px-2",
             columns === 2 && "w-1/2",
             columns === 3 && "w-1/3",
-            columns === 4 && "w-1/4"
+            columns === 4 && "w-1/4",
           )}
         >
           <TouchableOpacity
@@ -43,13 +43,13 @@ export const QuickActions = ({ actions, columns = 4 }: QuickActionsProps) => {
           >
             <View
               className={cn(
-                "w-16 h-16 rounded-2xl items-center justify-center mb-2",
-                colorClasses[action.color || "primary"]
+                "mb-2 h-16 w-16 items-center justify-center rounded-2xl",
+                colorClasses[action.color || "primary"],
               )}
             >
               {action.icon}
             </View>
-            <Text variant="caption" align="center" numberOfLines={2}>
+            <Text color="secondary" numberOfLines={2}>
               {action.label}
             </Text>
           </TouchableOpacity>

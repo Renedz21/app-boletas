@@ -10,6 +10,7 @@ import { SearchBar } from "@/modules/core/components/ui/search-bar";
 import { Text } from "@/modules/core/components/ui/text";
 import { Badge } from "@/modules/core/components/ui/badge";
 import { cn } from "@/lib/utils";
+import colors from "@/modules/core/constants/colors";
 
 interface BoletasHeaderProps {
   searchQuery: string;
@@ -34,7 +35,7 @@ export const BoletasHeader = ({
   const isFiltered = filteredCount !== totalCount || searchQuery.length > 0;
 
   return (
-    <View className="bg-white">
+    <View className="bg-neutral-default">
       <View className="px-4 py-4">
         {/* Search and filter section */}
         <View className="mb-4 flex-row items-center gap-3">
@@ -45,7 +46,7 @@ export const BoletasHeader = ({
               placeholder="Buscar boletas..."
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
-              className="border-gray-200 bg-gray-50"
+              className="border-primary-border bg-neutral-default"
             />
           </View>
 
@@ -54,21 +55,27 @@ export const BoletasHeader = ({
               onPress={onFilterPress}
               activeOpacity={0.7}
               className={cn(
-                "flex-row items-center justify-center rounded-lg border-2 px-4 py-3 transition-all",
+                "flex-row items-center justify-center rounded-lg border px-4 py-3 transition-all",
                 activeFiltersCount > 0
-                  ? "border-primary-500 bg-primary-50"
-                  : "border-gray-200 bg-white hover:border-gray-300",
+                  ? "border-primary-default bg-primary-soft"
+                  : "border-primary-border bg-neutral-default hover:border-primary-border",
               )}
             >
               <SlidersHorizontalIcon
                 size={18}
-                color={activeFiltersCount > 0 ? "#3B82F6" : "#6B7280"}
+                color={
+                  activeFiltersCount > 0
+                    ? colors.primary.default
+                    : colors.neutral.placeholder
+                }
               />
               <Text
-                variant="body"
+                size="default"
                 className={cn(
                   "ml-2 text-sm font-semibold",
-                  activeFiltersCount > 0 ? "text-primary-600" : "text-gray-600",
+                  activeFiltersCount > 0
+                    ? "text-primary-default"
+                    : "text-neutral-placeholder",
                 )}
               >
                 Filtros
@@ -77,10 +84,13 @@ export const BoletasHeader = ({
                 <Badge
                   variant="default"
                   size="sm"
-                  className="ml-2 bg-primary-500"
-                  textClassName="text-white text-xs font-bold"
+                  className="bg-primary-default ml-2"
+                  textClassName="text-neutral-default text-xs font-bold"
                 >
-                  <Text variant="small" className="text-white text-xs font-bold">
+                  <Text
+                    size="default"
+                    className="text-neutral-default text-xs font-bold"
+                  >
                     {activeFiltersCount}
                   </Text>
                 </Badge>
@@ -92,25 +102,12 @@ export const BoletasHeader = ({
         {/* Results summary */}
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
-            <Text variant="body" className="text-sm font-medium text-gray-600">
+            <Text
+              size="default"
+              className="text-neutral-placeholder text-sm font-medium"
+            >
               Mostrando {filteredCount} de {totalCount} boletas
             </Text>
-
-            {isFiltered && (
-              <TouchableOpacity
-                onPress={() => {
-                  onSearchChange("");
-                  // Reset other filters if needed
-                }}
-                activeOpacity={0.7}
-                className="flex-row items-center gap-1"
-              >
-                <XIcon size={14} color="#6B7280" />
-                <Text variant="caption" className="text-xs text-gray-500">
-                  Limpiar búsqueda
-                </Text>
-              </TouchableOpacity>
-            )}
           </View>
 
           {/* Quick stats */}
@@ -119,8 +116,8 @@ export const BoletasHeader = ({
               <View className="flex-row items-center gap-1 rounded-full bg-green-50 px-2 py-1">
                 <SparklesIcon size={12} color="#059669" />
                 <Text
-                  variant="caption"
-                  className="text-xs font-medium text-green-700"
+                  size="default"
+                  className="text-xs font-medium text-success-500"
                 >
                   {Math.round((filteredCount / totalCount) * 100)}% encontrado
                 </Text>

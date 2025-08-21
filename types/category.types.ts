@@ -13,7 +13,7 @@ export interface Category extends Omit<CategoryRow, "created_at"> {
 export interface CategoryConfig {
   id: string;
   nombre: string;
-  esDeducible: boolean;
-  orden: number;
-  activo: boolean;
+  esDeducible: boolean | null;
+  orden: number | null;
+  activo: boolean | null;
 }

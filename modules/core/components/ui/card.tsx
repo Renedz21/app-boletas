@@ -8,7 +8,7 @@ const Card = ({ className, children, ...props }: CardProps) => {
   return (
     <View
       className={cn(
-        "rounded-2xl border border-border bg-surface p-4 shadow-md",
+        "border-primary-border rounded-2xl border bg-white p-4 shadow-md",
         className,
       )}
       {...props}
@@ -24,7 +24,10 @@ interface CardHeaderProps extends ViewProps {}
 
 const CardHeader = ({ className, children, ...props }: CardHeaderProps) => {
   return (
-    <View className={cn("border-b border-border pb-3", className)} {...props}>
+    <View
+      className={cn("border-primary-border border-b pb-3", className)}
+      {...props}
+    >
       {children}
     </View>
   );
@@ -76,7 +79,7 @@ interface CardContentProps extends ViewProps {
 
 const CardContent = ({ className, children, ...props }: CardContentProps) => {
   return (
-    <View className={cn("pt-4", className)} {...props}>
+    <View className={cn("w-full", className)} {...props}>
       {children}
     </View>
   );
@@ -98,7 +101,7 @@ const CardFooter = ({
     <View
       ref={ref}
       className={cn(
-        "mt-4 flex-row items-center border-t border-border pt-4",
+        "border-primary-border mt-4 flex-row items-center border-t pt-4",
         className,
       )}
       {...props}

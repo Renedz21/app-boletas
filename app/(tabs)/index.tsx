@@ -1,6 +1,6 @@
 import React from "react";
-import { View, ScrollView } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { ScrollView, View } from "react-native";
+import { useRouter } from "expo-router";
 import {
   FileTextIcon,
   CameraIcon,
@@ -11,6 +11,8 @@ import {
   TagIcon,
   DownloadIcon,
   BellIcon,
+  Image,
+  User,
 } from "lucide-react-native";
 import { Container } from "@/modules/core/components/ui/container";
 import { Header } from "@/modules/core/components/navigation/header";
@@ -29,6 +31,8 @@ import {
 } from "@/types/boleta.types";
 import { Category } from "@/types/category.types";
 import { UserProfile } from "@/types/user.types";
+import { FloatingActionButton } from "@/modules/core/components/ui/floating-action-button";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Dummy data using correct types
 const recentBoletas: Boleta[] = [
@@ -121,40 +125,79 @@ const recentBoletas: Boleta[] = [
   },
 ];
 
-const categories: Category[] = [
+// Dummy data for categories
+const categories: Omit<Category, "createdAt" | "updatedAt">[] = [
   {
-    id: "cat-1",
+    id: "1",
     nombre: "Alimentación",
     es_deducible: false,
     orden: 1,
     activo: true,
-    createdAt: new Date("2024-01-01T00:00:00Z"),
   },
   {
-    id: "cat-2",
-    nombre: "Salud",
+    id: "2",
+    nombre: "Transporte",
     es_deducible: true,
     orden: 2,
     activo: true,
-    createdAt: new Date("2024-01-01T00:00:00Z"),
   },
   {
-    id: "cat-3",
-    nombre: "Transporte",
+    id: "3",
+    nombre: "Entretenimiento",
     es_deducible: false,
     orden: 3,
     activo: true,
-    createdAt: new Date("2024-01-01T00:00:00Z"),
+  },
+  {
+    id: "4",
+    nombre: "Salud",
+    es_deducible: true,
+    orden: 4,
+    activo: true,
+  },
+  {
+    id: "5",
+    nombre: "Educación",
+    es_deducible: true,
+    orden: 5,
+    activo: true,
+  },
+  {
+    id: "6",
+    nombre: "Vivienda",
+    es_deducible: true,
+    orden: 6,
+    activo: true,
+  },
+  {
+    id: "7",
+    nombre: "Servicios",
+    es_deducible: false,
+    orden: 7,
+    activo: true,
+  },
+  {
+    id: "8",
+    nombre: "Otros",
+    es_deducible: false,
+    orden: 8,
+    activo: true,
   },
 ];
 
+// Dummy data for user profile
 const userProfile: UserProfile = {
-  id: "user-123",
-  fullName: "Juan Pérez",
-  planType: "premium",
-  scansUsed: 45,
-  scansLimit: 100,
-  subscriptionEndsAt: new Date("2024-12-31T23:59:59Z"),
+  id: "user-1",
+  full_name: "Juan Pérez",
+  plan_type: "premium",
+  scans_used: 45,
+  scans_limit: 100,
+  subscriptionEndsAt: new Date("2024-12-31"),
+  createdAt: new Date("2024-01-01"),
+  updatedAt: new Date("2024-01-15"),
+  birthDate: new Date("1990-05-15"),
+  gender: "Masculino",
+  phone_number: "+51 999 123 456",
 };
 
 // Helper function to format timestamp
@@ -193,7 +236,7 @@ export default function DashboardScreen() {
       label: "Escanear",
       icon: <CameraIcon size={24} color="#3B82F6" />,
       color: "primary" as const,
-      onPress: () => router.push("/scanner"),
+      onPress: () => router.push("/"),
     },
     {
       id: "2",
@@ -220,86 +263,89 @@ export default function DashboardScreen() {
 
   return (
     <>
-      <Header
-        title="Dashboard"
-        subtitle="Bienvenido de vuelta"
-        rightAction={
-          <IconButton variant="ghost" size="md">
-            <BellIcon size={24} color="#64748B" />
-          </IconButton>
-        }
-      />
+      <SafeAreaView className="flex-1 bg-white px-6">
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <Header
+            rightAction={
+              <IconButton variant="ghost" size="md">
+                <BellIcon size={24} color="#64748B" />
+              </IconButton>
+            }
+            leftComponent={
+              <IconButton variant="ghost" size="md">
+                <User size={24} color="#64748B" />
+              </IconButton>
+            }
+          />
 
-      <Container scrollable safe={false}>
-        {/* Mensaje de bienvenida */}
-        <Card className="mb-4 border-primary-100 bg-primary-50">
-          <CardContent className="pt-4">
-            <Text variant="h3" className="mb-1">
-              Hola, {userProfile.fullName || "Usuario"}!
+          {/* Mensaje de bienvenida */}
+          <View className="mb-4">
+            <Text size="lg" className="mb-1 font-semibold" color="primary">
+              Hola, {userProfile.full_name || "Usuario"}!
             </Text>
-            <Text variant="body-secondary">
-              Plan {userProfile.planType} • {userProfile.scansUsed}/
-              {userProfile.scansLimit} escaneos usados
+            <Text color={"secondary"}>
+              Plan {userProfile.plan_type} • {userProfile.scans_used}/
+              {userProfile.scans_limit} escaneos usados
             </Text>
-          </CardContent>
-        </Card>
+          </View>
 
-        {/* Estadísticas */}
-        <StatsGrid columns={2} className="mb-4">
-          <SummaryCard
-            title="Total Boletas"
-            value={recentBoletas.length.toString()}
-            subtitle="Este mes"
-            icon={<FileTextIcon size={24} color="#3B82F6" />}
-            trend={{ value: 12, isPositive: true }}
-            color="primary"
-          />
-          <SummaryCard
-            title="Gasto Total"
-            value={`S/ ${recentBoletas.reduce((sum, boleta) => sum + boleta.total, 0).toFixed(2)}`}
-            subtitle="Últimos 30 días"
-            icon={<TrendingUpIcon size={24} color="#A855F7" />}
-            trend={{ value: 8, isPositive: false }}
-            color="secondary"
-          />
-          <SummaryCard
-            title="Categorías"
-            value={categories.filter((cat) => cat.activo).length.toString()}
-            subtitle="Activas"
-            icon={<FolderIcon size={24} color="#14B8A6" />}
-            color="accent"
-          />
-          <SummaryCard
-            title="Deducibles"
-            value={recentBoletas
-              .filter((boleta) => boleta.es_gasto_deducible)
-              .length.toString()}
-            subtitle="Gastos deducibles"
-            icon={<CalendarIcon size={24} color="#F59E0B" />}
-            color="warning"
-          />
-        </StatsGrid>
+          {/* Estadísticas */}
+          <StatsGrid columns={2} className="mb-4">
+            <SummaryCard
+              title="Total Boletas"
+              value={recentBoletas.length.toString()}
+              subtitle="Este mes"
+              icon={<FileTextIcon size={24} color="#3B82F6" />}
+              trend={{ value: 12, isPositive: true }}
+              color="primary"
+            />
+            <SummaryCard
+              title="Gasto Total"
+              value={`S/ ${recentBoletas.reduce((sum, boleta) => sum + boleta.total, 0).toFixed(2)}`}
+              subtitle="Últimos 30 días"
+              icon={<TrendingUpIcon size={24} color="#A855F7" />}
+              trend={{ value: 8, isPositive: false }}
+              color="secondary"
+            />
+            <SummaryCard
+              title="Categorías Activas"
+              value={categories.filter((cat) => cat.activo).length.toString()}
+              subtitle="Activas"
+              icon={<FolderIcon size={24} color="#14B8A6" />}
+              color="accent"
+            />
+            <SummaryCard
+              title="Gastos Deducibles"
+              value={recentBoletas
+                .filter((boleta) => boleta.es_gasto_deducible)
+                .length.toString()}
+              subtitle="Gastos deducibles"
+              icon={<CalendarIcon size={24} color="#F59E0B" />}
+              color="warning"
+            />
+          </StatsGrid>
 
-        {/* Acciones rápidas */}
-        <Card className="mb-4">
-          <CardContent className="pt-4">
-            <Text variant="h4" className="mb-4">
+          {/* Acciones rápidas */}
+          <View className="mb-4">
+            <Text size="lg" className="mb-4 font-semibold" color="primary">
               Acciones Rápidas
             </Text>
             <QuickActions actions={quickActions} />
-          </CardContent>
-        </Card>
-
-        {/* Actividad reciente */}
-        <RecentActivity
-          activities={activities}
-          onActivityPress={(activity) => console.log(activity)}
-          onViewAllPress={() => router.push("/tickets")}
-        />
-
-        {/* Espacio extra al final */}
-        <View className="h-4" />
-      </Container>
+          </View>
+        </ScrollView>
+        <View className="relative">
+          <FloatingActionButton
+            size="lg"
+            icon={<CameraIcon size={32} color="#FFFFFF" />}
+            onPress={() => router.push("/scanner")}
+            position="bottom-right"
+          />
+        </View>
+      </SafeAreaView>
     </>
   );
 }

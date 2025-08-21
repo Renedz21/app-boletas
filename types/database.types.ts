@@ -128,33 +128,51 @@ export interface Database {
         Row: {
           id: string;
           full_name: string | null;
-          plan_type: string;
+          plan_type: string | null;
           scans_used: number | null;
           scans_limit: number | null;
           subscription_ends_at: string | null;
           created_at: string | null;
           updated_at: string | null;
+          birth_date: string | null;
+          gender: string | null;
+          phone_number: string | null;
         };
         Insert: {
           id: string;
           full_name?: string | null;
-          plan_type?: string;
+          plan_type?: string | null;
           scans_used?: number | null;
           scans_limit?: number | null;
           subscription_ends_at?: string | null;
           created_at?: string | null;
           updated_at?: string | null;
+          birth_date?: string | null;
+          gender?: string | null;
+          phone_number?: string | null;
         };
         Update: {
           id?: string;
           full_name?: string | null;
-          plan_type?: string;
+          plan_type?: string | null;
           scans_used?: number | null;
           scans_limit?: number | null;
           subscription_ends_at?: string | null;
           created_at?: string | null;
           updated_at?: string | null;
+          birth_date?: string | null;
+          gender?: string | null;
+          phone_number?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "user_profiles_id_fkey";
+            columns: ["id"];
+            isOneToOne: true;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       items_boleta: {
         Row: {

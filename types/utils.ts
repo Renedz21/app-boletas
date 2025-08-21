@@ -1,6 +1,6 @@
 import { Boleta, BoletaRow } from "./boleta.types";
 import { Category, CategoryRow } from "./category.types";
-import { User, UserRow } from "./user.types";
+import { UserProfile, UserRow } from "./user.types";
 
 // Convert Supabase boleta row to app boleta
 export function convertBoletaRow(row: BoletaRow): Boleta {
@@ -53,10 +53,14 @@ export function convertCategoryRow(row: CategoryRow): Category {
 }
 
 // Convert Supabase user row to app user
-export function convertUserRow(row: UserRow): User {
+export function convertUserRow(userRow: UserRow): UserProfile {
   return {
-    ...row,
-    createdAt: row.created_at ? new Date(row.created_at) : null,
-    updatedAt: row.updated_at ? new Date(row.updated_at) : null,
+    ...userRow,
+    createdAt: userRow.created_at ? new Date(userRow.created_at) : null,
+    updatedAt: userRow.updated_at ? new Date(userRow.updated_at) : null,
+    subscriptionEndsAt: userRow.subscription_ends_at
+      ? new Date(userRow.subscription_ends_at)
+      : null,
+    birthDate: userRow.birth_date ? new Date(userRow.birth_date) : null,
   };
 }

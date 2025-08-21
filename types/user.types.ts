@@ -6,16 +6,28 @@ export type UserInsert =
 export type UserUpdate =
   Database["public"]["Tables"]["user_profiles"]["Update"];
 
-export interface User extends Omit<UserRow, "created_at" | "updated_at"> {
+export type PlanType = "free" | "premium";
+export type Gender =
+  | "Masculino"
+  | "Femenino"
+  | "No Binario"
+  | "Prefiero no decir";
+
+export interface UserProfile
+  extends Omit<
+    UserRow,
+    "created_at" | "updated_at" | "subscription_ends_at" | "birth_date"
+  > {
   createdAt: Date | null;
   updatedAt: Date | null;
+  subscriptionEndsAt: Date | null;
+  birthDate: Date | null;
 }
 
-export interface UserProfile {
-  id: string;
-  fullName: string | null;
-  planType: string;
-  scansUsed: number | null;
-  scansLimit: number | null;
-  subscriptionEndsAt: Date | null;
+export interface UserProfileForm {
+  fullName?: string;
+  planType?: PlanType;
+  birthDate?: Date;
+  gender?: Gender;
+  phoneNumber?: string;
 }

@@ -61,15 +61,15 @@ const StatCard = ({
   const config = colorClasses[color];
 
   return (
-    <Card className={cn("border bg-white", config.border)}>
+    <Card className={cn("bg-neutral-default border", config.border)}>
       <CardContent className="p-3">
         <View className="mb-2 flex-row items-center justify-between">
           <View className={cn("rounded-lg p-1.5", config.iconBg)}>{icon}</View>
           {trend && (
             <Text
-              variant="small"
+              size="default"
               className={cn(
-                "text-[11px] font-semibold",
+                "text-xs font-semibold",
                 trend.isPositive ? "text-green-600" : "text-red-600",
               )}
             >
@@ -79,26 +79,23 @@ const StatCard = ({
           )}
         </View>
 
-        <Text
-          variant="h4"
-          className={cn("mb-1 text-xl font-bold", config.text)}
-        >
+        <Text size="lg" className={cn("mb-1 text-xl font-bold", config.text)}>
           {value}
         </Text>
 
         <Text
-          variant="caption"
+          size="default"
           color="secondary"
-          className="text-[11px] text-gray-600"
+          className="text-neutral-placeholder text-xs"
         >
           {title}
         </Text>
 
         {subtitle && (
           <Text
-            variant="caption"
-            color="tertiary"
-            className="mt-0.5 text-[10px] text-gray-500"
+            size="default"
+            color="neutral"
+            className="text-neutral-placeholder mt-0.5 text-xs"
           >
             {subtitle}
           </Text>

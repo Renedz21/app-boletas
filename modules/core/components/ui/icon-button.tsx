@@ -22,7 +22,7 @@ const iconButtonVariants = cva(
         sm: "h-8 w-8",
         md: "h-10 w-10",
         lg: "h-12 w-12",
-        xl: "h-14 w-14",
+        xl: "h-16 w-16",
       },
     },
     defaultVariants: {
@@ -34,15 +34,10 @@ const iconButtonVariants = cva(
 
 export interface IconButtonProps
   extends TouchableOpacityProps,
-    VariantProps<typeof iconButtonVariants> {
-  children: React.ReactNode;
-  ref?: React.RefObject<any>;
-  disabled?: boolean;
-}
+    VariantProps<typeof iconButtonVariants> {}
 
 const IconButton = ({
   children,
-  ref,
   disabled,
   className,
   variant,
@@ -51,7 +46,6 @@ const IconButton = ({
 }: IconButtonProps) => {
   return (
     <TouchableOpacity
-      ref={ref}
       className={cn(
         iconButtonVariants({ variant, size }),
         disabled && "opacity-50",

@@ -21,67 +21,76 @@ interface SummaryCardProps {
 export const SummaryCard = ({
   title,
   value,
-  subtitle,
   icon,
   trend,
   color = "primary",
   onPress,
 }: SummaryCardProps) => {
   const colorClasses = {
-    primary: "bg-primary-50 border-primary-100",
-    secondary: "bg-secondary-50 border-secondary-100",
+    primary: "bg-[#EFF6FF] border-[#DBEAFE]",
+    secondary: "bg-[#FAF5FF] border-[#F3E8FF]",
     accent: "bg-accent-50 border-accent-100",
     success: "bg-success-50 border-success-100",
     warning: "bg-warning-50 border-warning-100",
   };
 
   const iconColorClasses = {
-    primary: "bg-primary-100",
-    secondary: "bg-secondary-100",
+    primary: "bg-[#DBEAFE]",
+    secondary: "bg-[#F3E8FF]",
     accent: "bg-accent-100",
     success: "bg-success-100",
     warning: "bg-warning-100",
+  };
+
+  const textColorClasses = {
+    primary: "text-primary-strong",
+    secondary: "text-[#A855F7]",
+    accent: "text-accent-500",
+    success: "text-success-500",
+    warning: "text-warning-500",
   };
 
   const CardWrapper = onPress ? TouchableOpacity : View;
 
   return (
     <CardWrapper onPress={onPress} activeOpacity={0.9}>
-      <Card className={cn("p-4", colorClasses[color])}>
+      <Card className={cn("h-36 p-4", colorClasses[color])}>
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
-            <Text variant="caption" color="secondary" className="mb-1">
+            <Text
+              color="secondary"
+              className={cn("mb-1 font-medium", textColorClasses[color])}
+            >
               {title}
             </Text>
-            <Text variant="h2" className="mb-1">
-              {value}
-            </Text>
-            {subtitle && (
-              <Text variant="small" color="tertiary">
-                {subtitle}
+            <View className="flex-row items-end justify-between">
+              <Text
+                size="big"
+                className={cn("font-semibold", textColorClasses[color])}
+              >
+                {value}
               </Text>
-            )}
-            {trend && (
-              <View className="flex-row items-center mt-2">
-                {trend.isPositive ? (
-                  <ArrowUpIcon size={14} color="#22C55E" />
-                ) : (
-                  <ArrowDownIcon size={14} color="#EF4444" />
-                )}
-                <Text
-                  variant="small"
-                  className={cn(
-                    "ml-1",
-                    trend.isPositive ? "text-success-600" : "text-error-600"
+              {trend && (
+                <View className="flex-row items-center">
+                  {trend.isPositive ? (
+                    <ArrowUpIcon size={12} color="#22C55E" />
+                  ) : (
+                    <ArrowDownIcon size={12} color="#EF4444" />
                   )}
-                >
-                  {trend.value}%
-                </Text>
-              </View>
-            )}
+                  <Text
+                    className={cn(
+                      "ml-1 text-sm",
+                      trend.isPositive ? "text-success-500" : "text-error-500",
+                    )}
+                  >
+                    {trend.value}%
+                  </Text>
+                </View>
+              )}
+            </View>
           </View>
           {icon && (
-            <View className={cn("p-3 rounded-xl", iconColorClasses[color])}>
+            <View className={cn("rounded-full p-3", iconColorClasses[color])}>
               {icon}
             </View>
           )}

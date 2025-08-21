@@ -30,33 +30,29 @@ export const BoletaCard = ({
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-      <Card className="overflow-hidden border-gray-200 bg-white shadow-sm">
+      <Card className="bg-neutral-default overflow-hidden border-gray-200 shadow-sm">
         <CardContent className="p-0">
           {/* Header con título y menú */}
           <View className="p-4 pb-3">
             <View className="flex-row items-start justify-between">
               <View className="mr-3 flex-1">
-                <Text variant="h4" className="mb-1">
+                <Text size="lg" className="mb-1 font-medium text-gray-800">
                   {boleta.razon_social}
                 </Text>
-                <Text variant="caption" color="secondary">
-                  RUC: {boleta.ruc}
-                </Text>
+                <Text color="secondary">RUC: {boleta.ruc}</Text>
               </View>
-
-              {onMenuPress && (
-                <IconButton
-                  variant="ghost"
-                  size="sm"
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    onMenuPress();
-                  }}
-                  className="ml-2"
-                >
-                  <MoreVerticalIcon size={18} color="#64748B" />
-                </IconButton>
-              )}
+              <View className="flex-row items-center gap-2">
+                {boleta.subcategoria && (
+                  <Badge
+                    variant="outline"
+                    size="sm"
+                    className="border-primary-default border px-3 py-1.5"
+                    textClassName="text-primary-default font-medium text-sm"
+                  >
+                    {boleta.subcategoria}
+                  </Badge>
+                )}
+              </View>
             </View>
           </View>
 
@@ -64,91 +60,18 @@ export const BoletaCard = ({
           <View className="px-4 pb-4">
             <View className="flex-row items-center justify-between">
               <Text
-                variant="h3"
-                className="text-2xl font-bold text-primary-600"
+                size="lg"
+                className="text-neutral-strong text-2xl font-bold"
               >
                 {formatCurrency(boleta.total)}
               </Text>
               <Text
-                variant="small"
-                color="tertiary"
-                className="font-medium text-gray-500"
+                size="default"
+                color="neutral"
+                className="text-neutral-placeholder font-medium"
               >
                 {formatDate(boleta.fecha)}
               </Text>
-            </View>
-          </View>
-
-          {/* Badges de categoría y estado */}
-          <View className="px-4 pb-4">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-2">
-                {categoryConfig && (
-                  <Badge
-                    variant="outline"
-                    size="sm"
-                    className={cn(
-                      "border-2 px-3 py-1.5",
-                      categoryConfig.esDeducible
-                        ? "border-emerald-200 bg-emerald-50"
-                        : "border-blue-200 bg-blue-50",
-                    )}
-                    textClassName={cn(
-                      "font-semibold text-sm",
-                      categoryConfig.esDeducible
-                        ? "text-emerald-700"
-                        : "text-blue-700",
-                    )}
-                  >
-                    <View className="flex-row items-center">
-                      <Text variant="small" className="mr-1.5 text-base">
-                        {categoryConfig.esDeducible ? "💰" : "📋"}
-                      </Text>
-                      <Text variant="small" className="font-semibold">
-                        {categoryConfig.nombre}
-                      </Text>
-                    </View>
-                  </Badge>
-                )}
-                {boleta.subcategoria && (
-                  <Badge
-                    variant="outline"
-                    size="sm"
-                    className="border-2 border-purple-200 bg-purple-50 px-3 py-1.5"
-                    textClassName="text-purple-700 font-semibold text-sm"
-                  >
-                    <Text variant="small" className="font-semibold">
-                      {boleta.subcategoria}
-                    </Text>
-                  </Badge>
-                )}
-              </View>
-
-              <Badge
-                variant="outline"
-                size="sm"
-                className={cn(
-                  "border-2 px-3 py-1.5",
-                  boleta.revisado_manualmente
-                    ? "border-green-200 bg-green-50"
-                    : "border-amber-200 bg-amber-50",
-                )}
-                textClassName={cn(
-                  "font-semibold text-sm",
-                  boleta.revisado_manualmente
-                    ? "text-green-700"
-                    : "text-amber-700",
-                )}
-              >
-                <View className="flex-row items-center">
-                  <Text variant="small" className="mr-1.5 text-base">
-                    {boleta.revisado_manualmente ? "✅" : "⏳"}
-                  </Text>
-                  <Text variant="small" className="font-semibold">
-                    {boleta.revisado_manualmente ? "Revisado" : "Pendiente"}
-                  </Text>
-                </View>
-              </Badge>
             </View>
           </View>
 
@@ -159,17 +82,17 @@ export const BoletaCard = ({
               {boleta.notas && (
                 <View className="mb-3">
                   <Text
-                    variant="caption"
+                    size="default"
                     color="secondary"
-                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-600"
+                    className="text-neutral-placeholder mb-2 text-xs font-medium uppercase tracking-wide"
                   >
                     Notas
                   </Text>
                   <Text
-                    variant="body"
+                    size="default"
                     color="secondary"
                     numberOfLines={2}
-                    className="text-sm leading-5 text-gray-700"
+                    className="text-neutral-placeholder text-sm leading-5"
                   >
                     {boleta.notas}
                   </Text>
@@ -180,7 +103,7 @@ export const BoletaCard = ({
               {boleta.tags && boleta.tags.length > 0 && (
                 <View>
                   <Text
-                    variant="caption"
+                    size="default"
                     color="secondary"
                     className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-600"
                   >
@@ -195,7 +118,11 @@ export const BoletaCard = ({
                         className="border-indigo-200 bg-indigo-50 px-2 py-1"
                         textClassName="text-indigo-700 text-xs font-medium"
                       >
-                        <Text variant="small" className="text-xs font-medium">
+                        <Text
+                          size="default"
+                          color="secondary"
+                          className="text-xs font-medium"
+                        >
                           #{tag}
                         </Text>
                       </Badge>

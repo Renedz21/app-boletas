@@ -1,8 +1,15 @@
 import { Database } from "./database.types";
 
-export type TipoComprobante = Database["public"]["Enums"]["tipo_comprobante"];
-export type Moneda = Database["public"]["Enums"]["moneda"];
-export type MetodoPago = Database["public"]["Enums"]["metodo_pago"];
+export type TipoComprobante = "boleta" | "factura" | "nota_credito" | "recibo";
+export type Moneda = "PEN" | "USD" | "EUR";
+export type MetodoPago =
+  | "efectivo"
+  | "tarjeta_debito"
+  | "tarjeta_credito"
+  | "transferencia"
+  | "yape"
+  | "plin"
+  | "otro";
 
 export type BoletaRow = Database["public"]["Tables"]["boletas"]["Row"];
 export type BoletaInsert = Database["public"]["Tables"]["boletas"]["Insert"];

@@ -13,7 +13,7 @@ import { Category } from "@/types/category.types";
 import { cn } from "@/lib/utils";
 
 interface BoletasFilterProps {
-  categories: Category[];
+  categories: Omit<Category, "createdAt">[];
   selectedCategories: string[];
   selectedStatus: boolean[];
   onCategoryToggle: (category: string) => void;
@@ -43,7 +43,7 @@ export const BoletasFilter = ({
     <View className="bg-white">
       {/* Header con botón de filtros avanzados */}
       <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-4">
-        <Text variant="h4" className="text-lg font-bold text-gray-900">
+        <Text size="lg" className="text-neutral-strong text-lg font-bold">
           Filtros
         </Text>
         <View className="flex-row items-center gap-3">
@@ -55,36 +55,10 @@ export const BoletasFilter = ({
             >
               <XIcon size={16} color="#DC2626" />
               <Text
-                variant="caption"
-                className="ml-2 text-sm font-medium text-red-700"
+                size="default"
+                className="ml-2 text-sm font-medium text-error-500"
               >
                 Limpiar ({activeFiltersCount})
-              </Text>
-            </TouchableOpacity>
-          )}
-          {onToggleAdvancedFilters && (
-            <TouchableOpacity
-              onPress={onToggleAdvancedFilters}
-              activeOpacity={0.7}
-              className={cn(
-                "flex-row items-center rounded-lg border-2 px-4 py-2 transition-all",
-                showAdvancedFilters
-                  ? "border-primary-600 bg-primary-600"
-                  : "border-primary-200 bg-white hover:bg-primary-50",
-              )}
-            >
-              <FilterIcon
-                size={16}
-                color={showAdvancedFilters ? "#FFFFFF" : "#3B82F6"}
-              />
-              <Text
-                variant="body"
-                className={cn(
-                  "ml-2 text-sm font-semibold",
-                  showAdvancedFilters ? "text-white" : "text-primary-600",
-                )}
-              >
-                Avanzado
               </Text>
             </TouchableOpacity>
           )}
@@ -92,16 +66,16 @@ export const BoletasFilter = ({
       </View>
 
       {/* Categorías scrollables */}
-      <View className="border-b border-gray-100 py-4">
+      <View className="border-t border-gray-100 py-4">
         <Text
-          variant="caption"
+          size="default"
           color="secondary"
-          className="mb-3 px-4 text-sm font-semibold uppercase tracking-wide text-gray-600"
+          className="text-neutral-placeholder mb-3 px-4 text-sm font-semibold uppercase tracking-wide"
         >
           Categorías ({selectedCategories.length} seleccionadas)
         </Text>
         <FlatList
-          data={categories}
+          data={categories as Category[]}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item: Category) => item.id}
@@ -125,20 +99,20 @@ export const BoletasFilter = ({
                   className={cn(
                     "flex-row items-center justify-center rounded-lg border-2 px-4 py-3",
                     isSelected
-                      ? "border-primary-500 bg-primary-100"
+                      ? "border-primary-default bg-primary-soft"
                       : "border-gray-200 bg-white",
                   )}
                 >
                   <Text
                     className={cn(
                       "text-sm font-semibold",
-                      isSelected ? "text-primary-800" : "text-gray-700",
+                      isSelected ? "text-primary-default" : "text-neutral-700",
                     )}
                   >
                     {category.nombre}
                   </Text>
                   {isSelected && (
-                    <View className="ml-2 rounded-full bg-primary-500 p-1">
+                    <View className="bg-primary-default ml-2 rounded-full p-1">
                       <CheckIcon size={10} color="white" />
                     </View>
                   )}
@@ -147,123 +121,12 @@ export const BoletasFilter = ({
             );
           }}
         />
-      </View>
-
-      {/* Estado de Revisión */}
-      <View className="border-b border-gray-100 px-4 py-4">
-        <Text
-          variant="caption"
-          color="secondary"
-          className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-600"
-        >
-          Estado de Revisión ({selectedStatus.length} seleccionados)
-        </Text>
-        <View className="flex-row gap-3">
-          {statusOptions.map((status) => {
-            const isSelected = selectedStatus.includes(status);
-            const label = status ? "Revisado" : "No Revisado";
-            const icon = status ? "✅" : "⏳";
-            console.log(
-              `Status: ${label} (${status}) - isSelected: ${isSelected}`,
-            );
-            return (
-              <TouchableOpacity
-                key={status.toString()}
-                onPress={() => {
-                  console.log(`Toggling status: ${status}`);
-                  onStatusToggle(status);
-                }}
-                activeOpacity={0.7}
-              >
-                <View
-                  className={cn(
-                    "flex-row items-center rounded-lg border-2 px-4 py-3",
-                    isSelected
-                      ? "border-primary-500 bg-primary-100"
-                      : "border-gray-200 bg-white",
-                  )}
-                >
-                  <Text className="mr-2 text-base">{icon}</Text>
-                  <Text
-                    className={cn(
-                      "text-sm font-semibold",
-                      isSelected ? "text-primary-800" : "text-gray-700",
-                    )}
-                  >
-                    {label}
-                  </Text>
-                  {isSelected && (
-                    <View className="ml-2 rounded-full bg-primary-500 p-1">
-                      <CheckIcon size={10} color="white" />
-                    </View>
-                  )}
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </View>
-
-      {/* Filtros avanzados (expandible) */}
-      {showAdvancedFilters && (
-        <View className="border-t border-gray-100 bg-gray-50 px-4 py-4">
-          <Text
-            variant="caption"
-            color="secondary"
-            className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-600"
-          >
-            Filtros Avanzados
-          </Text>
-          <View className="flex-row gap-4">
-            <View className="flex-1">
-              <Text
-                variant="caption"
-                color="secondary"
-                className="mb-2 text-sm font-medium text-gray-600"
-              >
-                Fecha desde
-              </Text>
-              <TouchableOpacity className="flex-row items-center rounded-lg border-2 border-gray-200 bg-white px-4 py-3 transition-all hover:border-gray-300">
-                <CalendarIcon size={18} color="#6B7280" />
-                <Text
-                  variant="body"
-                  className="ml-3 text-sm font-medium text-gray-700"
-                >
-                  Seleccionar
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View className="flex-1">
-              <Text
-                variant="caption"
-                color="secondary"
-                className="mb-2 text-sm font-medium text-gray-600"
-              >
-                Fecha hasta
-              </Text>
-              <TouchableOpacity className="flex-row items-center rounded-lg border-2 border-gray-200 bg-white px-4 py-3 transition-all hover:border-gray-300">
-                <CalendarIcon size={18} color="#6B7280" />
-                <Text
-                  variant="body"
-                  className="ml-3 text-sm font-medium text-gray-700"
-                >
-                  Seleccionar
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      )}
-
-      {/* Botón Aplicar */}
-      <View className="border-t border-gray-100 bg-gray-50 px-4 py-4">
         <Button
           onPress={onApplyFilters}
-          className="w-full bg-primary-600 py-3"
-          textClassName="text-white font-semibold text-base"
-        >
-          Aplicar Filtros
-        </Button>
+          title="Aplicar Filtros"
+          variant="primary"
+          className="mx-4 my-6"
+        />
       </View>
     </View>
   );
