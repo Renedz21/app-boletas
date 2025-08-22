@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { View, Dimensions, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCameraDevice } from "react-native-vision-camera";
+import { type CameraDevice, useCameraDevice } from "react-native-vision-camera";
 
 // Custom hooks
 import { useCameraPermission } from "@/modules/core/hooks/use-camera-permission";
@@ -24,6 +24,9 @@ const { height: screenHeight } = Dimensions.get("window");
 const cameraHeight = screenHeight * 0.7;
 
 export default function ScannerScreen() {
+  // Camera device - debe ir primero
+  const device = useCameraDevice("back");
+
   // Custom hooks
   const { hasPermission, requestCameraAccess } = useCameraPermission();
   const {
@@ -34,7 +37,13 @@ export default function ScannerScreen() {
     stopCamera,
     startCamera,
     capturePhoto,
-  } = useCameraControls();
+    // Zoom controls
+    currentZoom,
+    zoomIn,
+    zoomOut,
+    resetZoom,
+    zoomGesture,
+  } = useCameraControls(device as CameraDevice);
   const { activeMode } = useScanMode();
   const {
     capturedPhoto,
@@ -54,9 +63,6 @@ export default function ScannerScreen() {
     "scanner",
   );
   const [imageForAnalysis, setImageForAnalysis] = useState<string>("");
-
-  // Camera device
-  const device = useCameraDevice("back");
 
   const handleCapture = useCallback(async () => {
     setIsCapturing(true);
@@ -118,14 +124,10 @@ export default function ScannerScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-900">
       {/* Header */}
-      <ScannerHeader
-        flashEnabled={flashEnabled}
-        onToggleFlash={toggleFlash}
-        onBack={handleBack}
-      />
+      <ScannerHeader onBack={handleBack} />
 
       {/* Camera Preview Area */}
-      <View className="mb-6 px-6">
+      <View className="mb-4 px-6">
         <View className="overflow-hidden rounded-2xl border border-gray-700 bg-gray-800">
           <View
             className="items-center justify-center bg-gray-900"
@@ -140,6 +142,11 @@ export default function ScannerScreen() {
                 flashEnabled={flashEnabled}
                 activeMode={activeMode}
                 isActive={isCameraActive}
+                currentZoom={currentZoom}
+                onZoomIn={zoomIn}
+                onZoomOut={zoomOut}
+                onResetZoom={resetZoom}
+                gesture={zoomGesture}
               />
             )}
           </View>
@@ -151,6 +158,8 @@ export default function ScannerScreen() {
         onCapture={handleCapture}
         onGalleryPick={handleGalleryPick}
         isCapturing={isCapturing}
+        flashEnabled={flashEnabled}
+        onToggleFlash={toggleFlash}
       />
     </SafeAreaView>
   );

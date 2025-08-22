@@ -366,10 +366,10 @@ export default function DashboardScreen() {
         </ScrollView>
 
         {/* Floating Action Button */}
-        <View className="absolute bottom-6 right-6">
+        <View className="absolute bottom-2 right-2">
           <FloatingActionButton
-            size="lg"
-            icon={<CameraIcon size={32} color="#FFFFFF" />}
+            size="md"
+            icon={<CameraIcon size={28} color="#FFFFFF" />}
             onPress={() => router.push("/scanner")}
             position="bottom-right"
           />

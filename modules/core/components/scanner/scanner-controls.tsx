@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { ImageIcon } from "lucide-react-native";
+import { Flashlight, FlashlightOff, ImageIcon, Zap } from "lucide-react-native";
 import { IconButton } from "@/modules/core/components/ui/icon-button";
 import { CaptureButton } from "./capture-button";
 
@@ -7,23 +7,39 @@ interface ScannerControlsProps {
   onCapture: () => void;
   onGalleryPick: () => void;
   isCapturing: boolean;
+  flashEnabled: boolean;
+  onToggleFlash: () => void;
 }
 
 export const ScannerControls = ({
   onCapture,
   onGalleryPick,
   isCapturing,
+  flashEnabled,
+  onToggleFlash,
 }: ScannerControlsProps) => {
   return (
-    <View className="px-6 pb-8">
+    <View className="px-6 pb-8 pt-2">
       <View className="flex-row items-center justify-around">
         {/* Left Spacer */}
-        <View className="w-20" />
+        <IconButton
+          variant="ghost"
+          size="xl"
+          className={`${flashEnabled ? "bg-blue-500" : "bg-gray-800/50"}`}
+          onPress={onToggleFlash}
+        >
+          {flashEnabled ? (
+            <Flashlight size={24} color="#FFFFFF" />
+          ) : (
+            <FlashlightOff size={24} color="#FFFFFF" />
+          )}
+        </IconButton>
 
         {/* Capture Button - Centered */}
         <CaptureButton onCapture={onCapture} isCapturing={isCapturing} />
 
         {/* Gallery Button */}
+
         <IconButton
           variant="ghost"
           size="xl"
