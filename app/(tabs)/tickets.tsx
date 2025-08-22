@@ -42,8 +42,7 @@ export default function TicketsScreen() {
   );
 
   const handleOpenActionSheet = useCallback((boleta: Boleta) => {
-    console.log("Abriendo action sheet para:", boleta.razon_social);
-    setSelectedBoleta(boleta);
+    // Abriendo action sheet: necesario si el bottom sheet tarda en mostrarse.
     console.log("Presentando bottom sheet...");
 
     // Pequeño delay para asegurar que el componente esté montado
@@ -54,7 +53,6 @@ export default function TicketsScreen() {
   }, []);
 
   const handleCloseActionSheet = useCallback(() => {
-    console.log("Cerrando action sheet");
     actionSheetRef.current?.dismiss();
     setSelectedBoleta(null);
   }, []);
@@ -155,7 +153,7 @@ export default function TicketsScreen() {
 
   // Handlers
   const handleBoletaPress = useCallback((boleta: Boleta) => {
-    console.log("Ver detalles de:", boleta.razon_social);
+    // Ver detalles: mantener en caso de cambios en el flujo de navegación.
   }, []);
 
   const handleRefresh = useCallback(() => {
@@ -171,29 +169,19 @@ export default function TicketsScreen() {
 
   const handleActionPress = useCallback(
     (action: string) => {
-      console.log("Action pressed:", action);
-      if (!selectedBoleta) {
-        console.log("No hay boleta seleccionada");
-        return;
-      }
-
-      console.log(`${action} para:`, selectedBoleta.razon_social);
+      if (!selectedBoleta) return;
 
       switch (action) {
         case "view":
-          console.log("Ejecutando: Ver detalles");
           // Ver detalles
           break;
         case "download":
-          console.log("Ejecutando: Descargar");
           // Descargar
           break;
         case "edit":
-          console.log("Ejecutando: Editar");
           // Editar
           break;
         case "delete":
-          console.log("Ejecutando: Eliminar");
           // Eliminar
           break;
       }

@@ -84,12 +84,12 @@ export const BoletasHeader = ({
                 <Badge
                   variant="default"
                   size="sm"
-                  className="bg-primary-default ml-2"
+                  className="ml-2 bg-primary-default"
                   textClassName="text-neutral-default text-xs font-bold"
                 >
                   <Text
                     size="default"
-                    className="text-neutral-default text-xs font-bold"
+                    className="text-xs font-bold text-neutral-default"
                   >
                     {activeFiltersCount}
                   </Text>
@@ -104,7 +104,7 @@ export const BoletasHeader = ({
           <View className="flex-row items-center gap-3">
             <Text
               size="default"
-              className="text-neutral-placeholder text-sm font-medium"
+              className="text-sm font-medium text-neutral-placeholder"
             >
               Mostrando {filteredCount} de {totalCount} boletas
             </Text>

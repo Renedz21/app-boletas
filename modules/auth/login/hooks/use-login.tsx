@@ -55,7 +55,6 @@ export const useLogin = () => {
   };
 
   const handleCreateAccount = (data: z.infer<typeof fullSchema>) => {
-    console.log(data);
   };
 
   return {

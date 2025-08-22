@@ -27,7 +27,7 @@ const Container = ({
   const containerContent = (
     <View
       ref={!scrollable ? ref : undefined}
-      className={cn("flex-1 bg-background px-4 py-6", className)}
+      className={cn("bg-background flex-1 px-4 py-6", className)}
       {...props}
     >
       {children}
@@ -38,7 +38,7 @@ const Container = ({
     const scrollContent = (
       <ScrollView
         ref={ref as any}
-        className="flex-1 bg-background"
+        className="bg-background flex-1"
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         {...scrollViewProps}
@@ -51,7 +51,7 @@ const Container = ({
 
     if (safe) {
       return (
-        <SafeAreaView className="flex-1 bg-background">
+        <SafeAreaView className="bg-background flex-1">
           {scrollContent}
         </SafeAreaView>
       );
@@ -61,7 +61,7 @@ const Container = ({
 
   if (safe) {
     return (
-      <SafeAreaView className="flex-1 bg-background">
+      <SafeAreaView className="bg-background flex-1">
         {containerContent}
       </SafeAreaView>
     );

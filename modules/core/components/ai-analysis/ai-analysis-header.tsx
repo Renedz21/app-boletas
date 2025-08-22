@@ -18,14 +18,10 @@ export const AIAnalysisHeader = ({ onBack }: AIAnalysisHeaderProps) => {
       >
         <ArrowLeft size={24} color="#FFFFFF" />
       </IconButton>
-      
       <View className="flex-row items-center gap-2">
         <Brain size={20} color="#3B82F6" />
-        <Text className="text-lg font-semibold text-white">
-          Análisis IA
-        </Text>
+        <Text className="text-lg font-semibold text-white">Análisis IA</Text>
       </View>
-      
       <View className="w-10" /> {/* Spacer for centering */}
     </View>
   );

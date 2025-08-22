@@ -51,12 +51,7 @@ export const AnalysisStatus = ({ status, onRetry }: AnalysisStatusProps) => {
             No se pudo procesar la imagen. Intenta con una imagen más clara.
           </Text>
           {onRetry && (
-            <Button
-              title="Reintentar"
-              variant="primary"
-              size="default"
-              onPress={onRetry}
-            >
+            <Button variant="primary" size="default" onPress={onRetry}>
               Reintentar
             </Button>
           )}

@@ -48,10 +48,14 @@ export default function ScannerScreen() {
   const {
     capturedPhoto,
     showPreview,
+    isProcessing,
+    showConfirmation,
     showImagePreview,
     hideImagePreview,
     retakePhoto,
     confirmPhoto,
+    handleProcessImage,
+    handleCancelConfirmation,
   } = useImagePreview();
   const { handleGalleryPick } = useGalleryPicker();
   const { handleBack } = useNavigation();
@@ -63,6 +67,7 @@ export default function ScannerScreen() {
     "scanner",
   );
   const [imageForAnalysis, setImageForAnalysis] = useState<string>("");
+  const [aiResponse, setAiResponse] = useState<string>("");
 
   const handleCapture = useCallback(async () => {
     setIsCapturing(true);
@@ -79,14 +84,19 @@ export default function ScannerScreen() {
     startCamera(); // Restart camera when retaking
   }, [hideImagePreview, startCamera]);
 
-  const handleNavigateToAnalysis = useCallback((imagePath: string) => {
-    setImageForAnalysis(imagePath);
-    setCurrentView("ai-analysis");
-  }, []);
+  const handleNavigateToAnalysis = useCallback(
+    (imagePath: string, aiResponse?: string) => {
+      setImageForAnalysis(imagePath);
+      setAiResponse(aiResponse || "");
+      setCurrentView("ai-analysis");
+    },
+    [],
+  );
 
   const handleBackFromAnalysis = useCallback(() => {
     setCurrentView("scanner");
     setImageForAnalysis("");
+    setAiResponse("");
   }, []);
 
   // Show AI Analysis screen
@@ -94,6 +104,7 @@ export default function ScannerScreen() {
     return (
       <AIAnalysisScreen
         imagePath={imageForAnalysis}
+        aiResponse={aiResponse}
         onBack={handleBackFromAnalysis}
       />
     );
@@ -116,6 +127,10 @@ export default function ScannerScreen() {
           imagePath={capturedPhoto.path}
           onRetake={handleRetake}
           onConfirm={() => confirmPhoto(handleNavigateToAnalysis)}
+          showConfirmation={showConfirmation}
+          isProcessing={isProcessing}
+          onProcessImage={() => handleProcessImage(handleNavigateToAnalysis)}
+          onCancelConfirmation={handleCancelConfirmation}
         />
       </SafeAreaView>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import {
   FileTextIcon,
@@ -33,6 +33,7 @@ import { Category } from "@/types/category.types";
 import { UserProfile } from "@/types/user.types";
 import { FloatingActionButton } from "@/modules/core/components/ui/floating-action-button";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { scanBoleta } from "@/modules/services/ai/scan-boleta";
 
 // Dummy data using correct types
 const recentBoletas: Boleta[] = [
@@ -263,12 +264,12 @@ export default function DashboardScreen() {
 
   const handleActivityPress = (activity: any) => {
     // TODO: Navigate to boleta detail view
-    console.log("Activity pressed:", activity);
+    // Presiona actividad: fácil de eliminar cuando ya no se necesite la depuración.
   };
 
   const handleViewAllActivities = () => {
     // TODO: Navigate to all activities view
-    console.log("View all activities");
+    // Ver todas las actividades: útil hasta completar la implementación de todas las actividades.
   };
 
   return (
@@ -354,6 +355,10 @@ export default function DashboardScreen() {
             </Text>
             <QuickActions actions={quickActions} />
           </View>
+
+          <TouchableOpacity onPress={() => scanBoleta()}>
+            <Text className="text-blue-500">Scan Boleta</Text>
+          </TouchableOpacity>
 
           {/* Recent Activity Section */}
           <View className="">

@@ -2,6 +2,7 @@ import { View, Image, Dimensions } from "react-native";
 import { Text } from "@/modules/core/components/ui/text";
 import { Button } from "@/modules/core/components/ui/button";
 import { RotateCcw, Check, Camera, CircleCheck } from "lucide-react-native";
+import { ConfirmationModal } from "./confirmation-modal";
 import colors from "../../constants/colors";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -12,12 +13,20 @@ interface ImagePreviewFullscreenProps {
   imagePath: string;
   onRetake: () => void;
   onConfirm: () => void;
+  showConfirmation: boolean;
+  isProcessing: boolean;
+  onProcessImage: () => void;
+  onCancelConfirmation: () => void;
 }
 
 export const ImagePreviewFullscreen = ({
   imagePath,
   onRetake,
   onConfirm,
+  showConfirmation,
+  isProcessing,
+  onProcessImage,
+  onCancelConfirmation,
 }: ImagePreviewFullscreenProps) => {
   return (
     <View className="flex-1 items-center justify-center bg-gray-900 px-6">
@@ -70,6 +79,14 @@ export const ImagePreviewFullscreen = ({
           Toca "Retomar" para volver a la cámara
         </Text>
       </View>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        visible={showConfirmation}
+        onCancel={onCancelConfirmation}
+        onConfirm={onProcessImage}
+        isProcessing={isProcessing}
+      />
     </View>
   );
 };

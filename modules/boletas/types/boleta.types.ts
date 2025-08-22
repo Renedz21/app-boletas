@@ -1,6 +1,6 @@
 export type BoletaStatus = "pending" | "processed" | "rejected";
 
-export type BoletaCategory = 
+export type BoletaCategory =
   | "alimentacion"
   | "transporte"
   | "salud"

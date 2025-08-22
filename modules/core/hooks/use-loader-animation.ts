@@ -1,5 +1,11 @@
 import { useEffect } from "react";
-import { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Easing } from "react-native-reanimated";
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 
 export const useLoaderAnimation = () => {
   const rotation = useSharedValue(0);

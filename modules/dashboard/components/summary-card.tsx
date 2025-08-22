@@ -57,19 +57,19 @@ export const SummaryCard = ({
     <CardWrapper onPress={onPress} activeOpacity={0.9}>
       <Card className={cn("h-44 p-6", colorClasses[color])}>
         {/* Header with icon and title */}
-        <View className="flex-row items-start justify-between mb-4">
+        <View className="mb-4 flex-row items-start justify-between">
           <View className="flex-1 pr-3">
             <Text
               color="secondary"
-              className={cn("mb-2 text-sm font-medium", textColorClasses[color])}
+              className={cn(
+                "mb-2 text-sm font-medium",
+                textColorClasses[color],
+              )}
             >
               {title}
             </Text>
             {subtitle && (
-              <Text
-                className="text-xs text-gray-500"
-                color="secondary"
-              >
+              <Text className="text-xs text-gray-500" color="secondary">
                 {subtitle}
               </Text>
             )}
@@ -83,14 +83,11 @@ export const SummaryCard = ({
 
         {/* Value and trend */}
         <View className="flex-row items-end justify-between">
-          <Text
-            size="big"
-            className={cn("font-bold", textColorClasses[color])}
-          >
+          <Text size="big" className={cn("font-bold", textColorClasses[color])}>
             {value}
           </Text>
           {trend && (
-            <View className="flex-row items-center bg-white/50 rounded-full px-3 py-2">
+            <View className="flex-row items-center rounded-full bg-white/50 px-3 py-2">
               {trend.isPositive ? (
                 <ArrowUpIcon size={14} color="#22C55E" />
               ) : (
