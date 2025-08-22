@@ -55,7 +55,7 @@ export const BoletasList = ({
       return (
         <View className="flex-1 items-center justify-center py-12">
           <ActivityIndicator size="large" color="#3B82F6" />
-          <Text variant="body" color="secondary" className="mt-3">
+          <Text size={"default"} color="secondary" className="mt-3">
             Cargando boletas...
           </Text>
         </View>

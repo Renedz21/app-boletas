@@ -1,10 +1,5 @@
 import { Tabs } from "expo-router";
-import {
-  HomeIcon,
-  FileTextIcon,
-  CameraIcon,
-  SettingsIcon,
-} from "lucide-react-native";
+import { HomeIcon, FileTextIcon } from "lucide-react-native";
 import { TabBar } from "@/modules/core/components/navigation/tab-bar";
 
 export default function TabLayout() {
@@ -30,15 +25,6 @@ export default function TabLayout() {
           title: "Boletas",
           tabBarIcon: ({ color }) => (
             <FileTextIcon width={22} height={22} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Ajustes",
-          tabBarIcon: ({ color }) => (
-            <SettingsIcon width={22} height={22} color={color} />
           ),
         }}
       />
