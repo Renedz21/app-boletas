@@ -58,46 +58,6 @@ export default function CompleteProfileStep() {
           </FormItem>
         )}
       />
-      <FormField
-        control={control}
-        name="personalInformation.birth_date"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Fecha de nacimiento</FormLabel>
-            <FormControl>
-              <Input
-                keyboardType="default"
-                inputMode="text"
-                placeholder="Ingrese su fecha de nacimiento"
-                {...field}
-                value={field.value}
-                onChangeText={field.onChange}
-              />
-            </FormControl>
-            <FormMessage>{errors.root?.message}</FormMessage>
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name="personalInformation.gender"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Género</FormLabel>
-            <FormControl>
-              <Input
-                keyboardType="default"
-                inputMode="text"
-                placeholder="Ingrese su género"
-                {...field}
-                value={field.value}
-                onChangeText={field.onChange}
-              />
-            </FormControl>
-            <FormMessage>{errors.root?.message}</FormMessage>
-          </FormItem>
-        )}
-      />
     </View>
   );
 }

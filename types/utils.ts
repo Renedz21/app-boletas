@@ -61,6 +61,5 @@ export function convertUserRow(userRow: UserRow): UserProfile {
     subscriptionEndsAt: userRow.subscription_ends_at
       ? new Date(userRow.subscription_ends_at)
       : null,
-    birthDate: userRow.birth_date ? new Date(userRow.birth_date) : null,
   };
 }

@@ -5,8 +5,6 @@ export type FormValues = {
     avatar_url: string;
     full_name: string;
     phone_number: string;
-    gender: string;
-    birth_date: string;
   };
   account: {
     email: string;
@@ -19,8 +17,6 @@ export const personalSchema = z.object({
   avatar_url: z.string().optional(),
   full_name: z.string().min(1),
   phone_number: z.string().optional(),
-  birth_date: z.string().optional(),
-  gender: z.enum(["Masculino", "Femenino", "No Binario", "Prefiero no decir"]),
 });
 
 export const accountSchema = z

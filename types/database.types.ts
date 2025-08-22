@@ -134,8 +134,6 @@ export interface Database {
           subscription_ends_at: string | null;
           created_at: string | null;
           updated_at: string | null;
-          birth_date: string | null;
-          gender: string | null;
           phone_number: string | null;
         };
         Insert: {
@@ -147,8 +145,6 @@ export interface Database {
           subscription_ends_at?: string | null;
           created_at?: string | null;
           updated_at?: string | null;
-          birth_date?: string | null;
-          gender?: string | null;
           phone_number?: string | null;
         };
         Update: {
@@ -160,8 +156,6 @@ export interface Database {
           subscription_ends_at?: string | null;
           created_at?: string | null;
           updated_at?: string | null;
-          birth_date?: string | null;
-          gender?: string | null;
           phone_number?: string | null;
         };
         Relationships: [
