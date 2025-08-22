@@ -21,7 +21,7 @@ export const FloatingActionButton = ({
   style,
 }: FloatingActionButtonProps) => {
   const sizeClasses = {
-    md: "w-14 h-14",
+    md: "w-16 h-16",
     lg: "w-20 h-20",
   };
 
@@ -52,7 +52,7 @@ export const FloatingActionButton = ({
       <View
         className={cn(
           sizeClasses[size],
-          "bg-primary-default items-center justify-center rounded-full",
+          "items-center justify-center rounded-xl bg-primary-default",
         )}
       >
         {icon || <PlusIcon size={iconSize} color="#FFFFFF" strokeWidth={2.5} />}

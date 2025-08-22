@@ -1,11 +1,11 @@
 import { useCallback } from "react";
+import { useRouter } from "expo-router";
 
 export const useNavigation = () => {
+  const router = useRouter();
   const handleBack = useCallback(() => {
-    console.log("Back navigation");
-    // Aquí se implementará la lógica de navegación
-    // usando react-navigation o similar
-  }, []);
+    router.back();
+  }, [router]);
 
   return {
     handleBack,
