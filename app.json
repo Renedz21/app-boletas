@@ -26,10 +26,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.swiftkeys.reportai",
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.CAMERA"
-      ]
+      "permissions": ["android.permission.CAMERA", "android.permission.CAMERA"]
     },
     "web": {
       "bundler": "metro",

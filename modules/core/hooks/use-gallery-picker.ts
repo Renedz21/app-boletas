@@ -11,7 +11,6 @@ export const useGalleryPicker = () => {
         {
           text: "Seleccionar",
           onPress: () => {
-            console.log("Abriendo galería...");
             // Aquí se implementará la lógica para abrir la galería
             // usando react-native-image-picker o similar
           },

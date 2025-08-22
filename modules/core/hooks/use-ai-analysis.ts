@@ -3,7 +3,7 @@ import type { BoletaRow } from "@/types/boleta.types";
 
 export type AnalysisStatus = "analyzing" | "completed" | "error" | "saving";
 
-export const useAIAnalysis = (aiResponse?: string) => {
+export const useAIAnalysis = (aiResponse?: any) => {
   const [analysisStatus, setAnalysisStatus] =
     useState<AnalysisStatus>("analyzing");
   const [extractedData, setExtractedData] = useState<Partial<BoletaRow> | null>(
@@ -13,48 +13,51 @@ export const useAIAnalysis = (aiResponse?: string) => {
   // Process AI response when available
   useEffect(() => {
     if (aiResponse) {
-      try {
-        // Parse the AI response JSON
-        const parsedData = JSON.parse(aiResponse);
+      let cleanResponse = aiResponse;
 
-        // Transform the AI response to match our database structure
-        const transformedData: Partial<BoletaRow> = {
-          ruc: parsedData.ruc || null,
-          razon_social: parsedData.razon_social || null,
-          fecha: parsedData.fecha || null,
-          tipo_comprobante: parsedData.tipo_comprobante || "boleta",
-          serie: parsedData.serie || null,
-          numero: parsedData.numero || null,
-          igv: parsedData.igv || null,
-          subtotal: parsedData.subtotal || 0,
-          total: parsedData.total || 0,
-          moneda: parsedData.moneda || "PEN",
-          tipo_cambio: parsedData.tipo_cambio || null,
-          metodo_pago: parsedData.metodo_pago || null,
-          es_gasto_deducible: false, // Default value
-          confianza_ocr: 0.95, // Default confidence for AI analysis
-          datos_ocr_raw: parsedData, // Store the raw AI response
-        };
+      // If the response is a string with markdown formatting, extract the JSON
+      if (typeof aiResponse === "string") {
+        // Remove markdown formatting if present
+        if (aiResponse.includes("```json")) {
+          const jsonMatch = aiResponse.match(/```json\s*([\s\S]*?)\s*```/);
+          if (jsonMatch) {
+            cleanResponse = jsonMatch[1];
+          }
+        }
 
-        setExtractedData(transformedData);
-        setAnalysisStatus("completed");
-      } catch (error) {
-        console.error("Error parsing AI response:", error);
-        setAnalysisStatus("error");
-        // Set some default data even on error to show something to the user
-        setExtractedData({
-          ruc: "Error en análisis",
-          razon_social: "No se pudo extraer",
-          fecha: new Date().toISOString().split("T")[0],
-          total: 0,
-          tipo_comprobante: "boleta",
-          subtotal: 0,
-          moneda: "PEN",
-          es_gasto_deducible: false,
-          confianza_ocr: 0,
-          datos_ocr_raw: { error: "Error parsing AI response" },
-        });
+        // Try to parse as JSON if it's still a string
+        if (typeof cleanResponse === "string") {
+          try {
+            cleanResponse = JSON.parse(cleanResponse);
+          } catch (error) {
+            console.error("Error parsing cleaned AI response:", error);
+            setAnalysisStatus("error");
+            return;
+          }
+        }
       }
+
+      // Transform the AI response to match our database structure
+      const transformedData: Partial<BoletaRow> = {
+        ruc: cleanResponse.ruc || null,
+        razon_social: cleanResponse.razon_social || null,
+        fecha: cleanResponse.fecha || null,
+        tipo_comprobante: cleanResponse.tipo_comprobante || "boleta",
+        serie: cleanResponse.serie || null,
+        numero: cleanResponse.numero || null,
+        igv: cleanResponse.igv || null,
+        subtotal: cleanResponse.subtotal || 0,
+        total: cleanResponse.total || 0,
+        moneda: cleanResponse.moneda || "PEN",
+        tipo_cambio: cleanResponse.tipo_cambio || null,
+        metodo_pago: cleanResponse.metodo_pago || null,
+        es_gasto_deducible: false, // Default value
+        confianza_ocr: 0.95, // Default confidence for AI analysis
+        datos_ocr_raw: cleanResponse, // Store the raw AI response
+      };
+
+      setExtractedData(transformedData);
+      setAnalysisStatus("completed");
     } else {
       // Fallback to mock data if no AI response
       const timer = setTimeout(() => {

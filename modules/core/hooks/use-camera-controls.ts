@@ -5,7 +5,6 @@ import type {
   Camera as CameraType,
 } from "react-native-vision-camera";
 import { useCameraFocusZoom } from "./use-camera-focus-zoom";
-import { useCameraCapture } from "./use-camera-capture";
 
 export const useCameraControls = (device: CameraDevice) => {
   const [flashEnabled, setFlashEnabled] = useState(false);
@@ -14,11 +13,6 @@ export const useCameraControls = (device: CameraDevice) => {
 
   const { currentZoom, setZoom, resetZoom, zoomGesture } = useCameraFocusZoom({
     device,
-  });
-
-  const { isCapturing, capturePhoto } = useCameraCapture({
-    camera,
-    flashEnabled,
   });
 
   const toggleFlash = useCallback(() => {
@@ -31,6 +25,21 @@ export const useCameraControls = (device: CameraDevice) => {
 
   const startCamera = useCallback(() => {
     setIsCameraActive(true);
+  }, []);
+
+  const capturePhoto = useCallback(async () => {
+    if (!camera.current) {
+      Alert.alert("Error", "Cámara no disponible");
+      return null;
+    }
+
+    try {
+      const photo = await camera.current.takePhoto();
+      return photo;
+    } catch (error) {
+      Alert.alert("Error", "No se pudo tomar la foto");
+      return null;
+    }
   }, []);
 
   const zoomIn = useCallback(() => {
@@ -49,7 +58,6 @@ export const useCameraControls = (device: CameraDevice) => {
     stopCamera,
     startCamera,
     capturePhoto,
-    isCapturing,
     // Zoom controls
     currentZoom,
     zoomIn,

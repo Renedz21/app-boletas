@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
 import { useCallback, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import * as FileSystem from "expo-file-system";
 
 interface UploadState {
@@ -7,9 +7,17 @@ interface UploadState {
   uploadProgress: number;
 }
 
+interface ImageInfo {
+  size: number;
+  width?: number;
+  height?: number;
+  type: string;
+}
+
 interface UploadResult {
   imageUrl: string | null;
   success: boolean;
+  fileName: string;
 }
 
 export const useImageUpload = () => {
@@ -18,82 +26,152 @@ export const useImageUpload = () => {
     uploadProgress: 0,
   });
 
-  const uploadToSupabase = useCallback(
-    async (localImagePath: string): Promise<UploadResult> => {
-      try {
-        setState({ isUploading: true, uploadProgress: 0 });
+  const validateImage = async (imageUri: string): Promise<ImageInfo> => {
+    try {
+      // Handle native file paths from React Native Vision Camera
+      let fileInfo;
 
-        // Generate unique filename
-        const timestamp = Date.now();
-        const randomId = Math.random().toString(36).substring(2, 15);
-        const fileName = `boleta_${timestamp}_${randomId}.jpeg`;
+      if (imageUri.startsWith("/data/") || imageUri.startsWith("/storage/")) {
+        // Native Android path - convert to file:// URI
+        const fileUri = `file://${imageUri}`;
+        fileInfo = await FileSystem.getInfoAsync(fileUri);
+      } else {
+        // Regular URI (file://, content://, etc.)
+        fileInfo = await FileSystem.getInfoAsync(imageUri);
+      }
 
-        console.log(`Subiendo imagen: ${fileName}`);
+      if (!fileInfo.exists) {
+        throw new Error("Archivo no encontrado");
+      }
 
-        setState((prev) => ({ ...prev, uploadProgress: 20 }));
+      const maxSize = 10 * 1024 * 1024; // 10MB limit
+      if (fileInfo.size && fileInfo.size > maxSize) {
+        throw new Error("La imagen es demasiado grande (máximo 10MB)");
+      }
 
-        // Read the local file as base64
-        const base64Data = await FileSystem.readAsStringAsync(localImagePath, {
-          encoding: FileSystem.EncodingType.Base64,
+      return {
+        size: fileInfo.size || 0,
+        type: "image/jpeg",
+      };
+    } catch (error) {
+      console.error("Error al validar imagen:", error);
+      throw error;
+    }
+  };
+
+  // Generate unique filename with better format
+  const generateFileName = (): string => {
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 10);
+    return `boletas/${timestamp}_${randomId}.jpeg`;
+  };
+
+  const uploadAsBlob = async (imageUri: string): Promise<UploadResult> => {
+    try {
+      // Handle native file paths from React Native Vision Camera
+      let actualImageUri = imageUri;
+      if (imageUri.startsWith("/data/") || imageUri.startsWith("/storage/")) {
+        actualImageUri = `file://${imageUri}`;
+      }
+
+      const fileName = generateFileName();
+
+      // Read file as base64 first
+      const base64Data = await FileSystem.readAsStringAsync(actualImageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Convert base64 to Uint8Array for Supabase
+      // Use Buffer if available, otherwise fallback to manual conversion
+      let array: Uint8Array;
+
+      if (typeof Buffer !== "undefined") {
+        // Node.js environment
+        array = Buffer.from(base64Data, "base64");
+      } else {
+        // React Native environment - manual conversion
+        const bytes = atob(base64Data);
+        array = new Uint8Array(bytes.length);
+        for (let i = 0; i < bytes.length; i++) {
+          array[i] = bytes.charCodeAt(i);
+        }
+      }
+
+      // Upload the binary data to Supabase
+      const { data, error: uploadError } = await supabase.storage
+        .from("boletas-images")
+        .upload(fileName, array, {
+          contentType: "image/jpeg",
+          cacheControl: "3600",
+          upsert: false,
         });
 
-        setState((prev) => ({ ...prev, uploadProgress: 50 }));
+      if (uploadError) throw uploadError;
 
-        // Convert base64 to Uint8Array for Supabase
-        const binaryData = decodeBase64(base64Data);
+      // Get public URL
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("boletas-images").getPublicUrl(fileName);
 
-        setState((prev) => ({ ...prev, uploadProgress: 70 }));
+      return {
+        imageUrl: publicUrl,
+        success: true,
+        fileName: fileName,
+      };
+    } catch (error) {
+      console.error("Error al subir imagen:", error);
+      throw error;
+    }
+  };
 
-        // Upload using binary data
-        const { error: uploadError } = await supabase.storage
-          .from("boletas-images")
-          .upload(fileName, binaryData, {
-            contentType: "image/jpeg",
-            cacheControl: "3600",
-            upsert: false,
-          });
+  const uploadToSupabase = useCallback(
+    async (imageUri: string, maxRetries: number = 3): Promise<UploadResult> => {
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          setState({ isUploading: true, uploadProgress: 0 });
 
-        if (uploadError) throw uploadError;
+          // Validate image
+          const imageInfo = await validateImage(imageUri);
+          const imageSizeKB = Math.round(imageInfo.size / 1024);
 
-        setState((prev) => ({ ...prev, uploadProgress: 90 }));
 
-        // Get public URL
-        const { data: publicUrlData } = supabase.storage
-          .from("boletas-images")
-          .getPublicUrl(fileName);
+          setState((prev) => ({ ...prev, uploadProgress: 20 }));
 
-        const imageUrl = publicUrlData.publicUrl;
+          // Try blob method first (more reliable)
+          const result = await uploadAsBlob(imageUri);
 
-        setState((prev) => ({ ...prev, uploadProgress: 100 }));
+          setState((prev) => ({ ...prev, uploadProgress: 100 }));
 
-        console.log("Image uploaded successfully:", imageUrl);
-        return { imageUrl, success: true };
-      } catch (error) {
-        console.error("Error al subir imagen:", error);
-        return { imageUrl: null, success: false };
-      } finally {
-        setState({ isUploading: false, uploadProgress: 0 });
+          console.log("✅ Image uploaded successfully");
+
+          return result;
+        } catch (error) {
+          console.error(`❌ Upload attempt ${attempt} failed:`, error);
+
+          if (attempt === maxRetries) {
+            break;
+          }
+
+          // Wait before retry (exponential backoff)
+          const waitTime = Math.pow(2, attempt) * 1000;
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
+        }
       }
+
+      setState((prev) => ({
+        ...prev,
+        isUploading: false,
+        uploadProgress: 0,
+      }));
+
+      return {
+        imageUrl: null,
+        success: false,
+        fileName: "",
+      };
     },
     [],
   );
-
-  // Helper function to decode base64 to Uint8Array
-  const decodeBase64 = (base64: string): Uint8Array => {
-    try {
-      // For React Native, we need to handle base64 differently
-      const binaryString = atob(base64);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      return bytes;
-    } catch (error) {
-      console.error("Error decoding base64:", error);
-      // Fallback: return empty array
-      return new Uint8Array();
-    }
-  };
 
   return {
     ...state,

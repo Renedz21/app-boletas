@@ -43,7 +43,7 @@ export const BoletasFilter = ({
     <View className="bg-white">
       {/* Header con botón de filtros avanzados */}
       <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-4">
-        <Text size="lg" className="text-neutral-strong text-lg font-bold">
+        <Text size="lg" className="text-lg font-bold text-neutral-strong">
           Filtros
         </Text>
         <View className="flex-row items-center gap-3">
@@ -70,7 +70,7 @@ export const BoletasFilter = ({
         <Text
           size="default"
           color="secondary"
-          className="text-neutral-placeholder mb-3 px-4 text-sm font-semibold uppercase tracking-wide"
+          className="mb-3 px-4 text-sm font-semibold uppercase tracking-wide text-neutral-placeholder"
         >
           Categorías ({selectedCategories.length} seleccionadas)
         </Text>
@@ -89,7 +89,6 @@ export const BoletasFilter = ({
             return (
               <TouchableOpacity
                 onPress={() => {
-                  console.log(`Toggling category: ${category.id}`);
                   onCategoryToggle(category.id);
                 }}
                 activeOpacity={0.7}
@@ -112,7 +111,7 @@ export const BoletasFilter = ({
                     {category.nombre}
                   </Text>
                   {isSelected && (
-                    <View className="bg-primary-default ml-2 rounded-full p-1">
+                    <View className="ml-2 rounded-full bg-primary-default p-1">
                       <CheckIcon size={10} color="white" />
                     </View>
                   )}

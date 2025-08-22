@@ -56,10 +56,6 @@ export function WelcomeModal({
   };
 
   // Debug log
-  console.log("WelcomeModal render:", {
-    visible,
-    translateY: translateY.value,
-  });
 
   return (
     <Modal

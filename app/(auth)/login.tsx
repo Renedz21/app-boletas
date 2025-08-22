@@ -31,7 +31,6 @@ export default function LoginScreen() {
 
   const handleGoHome = () => {
     // Navigate to home or main app
-    console.log("Going to home...");
   };
 
   return (

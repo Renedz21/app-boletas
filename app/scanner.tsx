@@ -10,7 +10,6 @@ import { useScanMode } from "@/modules/core/hooks/use-scan-mode";
 import { useImagePreview } from "@/modules/core/hooks/use-image-preview";
 import { useGalleryPicker } from "@/modules/core/hooks/use-gallery-picker";
 import { useNavigation } from "@/modules/core/hooks/use-navigation";
-import { useImageUpload } from "@/modules/core/hooks/use-upload";
 
 // Components
 import { ScannerHeader } from "@/modules/core/components/scanner/scanner-header";
@@ -38,7 +37,6 @@ export default function ScannerScreen() {
     stopCamera,
     startCamera,
     capturePhoto,
-    isCapturing,
     // Zoom controls
     currentZoom,
     zoomIn,
@@ -50,14 +48,19 @@ export default function ScannerScreen() {
   const {
     capturedPhoto,
     showPreview,
+    isProcessing,
+    showConfirmation,
     showImagePreview,
     hideImagePreview,
     retakePhoto,
     confirmPhoto,
+    handleProcessImage,
+    handleCancelConfirmation,
   } = useImagePreview();
   const { handleGalleryPick } = useGalleryPicker();
   const { handleBack } = useNavigation();
-  const { isUploading, uploadProgress } = useImageUpload();
+
+  const [isCapturing, setIsCapturing] = useState(false);
 
   // State for navigation
   const [currentView, setCurrentView] = useState<"scanner" | "ai-analysis">(
@@ -67,11 +70,13 @@ export default function ScannerScreen() {
   const [aiResponse, setAiResponse] = useState<string>("");
 
   const handleCapture = useCallback(async () => {
+    setIsCapturing(true);
     const photo = await capturePhoto();
     if (photo) {
       stopCamera(); // Stop camera to save resources
       showImagePreview(photo);
     }
+    setIsCapturing(false);
   }, [capturePhoto, showImagePreview, stopCamera]);
 
   const handleRetake = useCallback(() => {
@@ -122,8 +127,10 @@ export default function ScannerScreen() {
           imagePath={capturedPhoto.path}
           onRetake={handleRetake}
           onConfirm={() => confirmPhoto(handleNavigateToAnalysis)}
-          isUploading={isUploading}
-          uploadProgress={uploadProgress}
+          showConfirmation={showConfirmation}
+          isProcessing={isProcessing}
+          onProcessImage={() => handleProcessImage(handleNavigateToAnalysis)}
+          onCancelConfirmation={handleCancelConfirmation}
         />
       </SafeAreaView>
     );

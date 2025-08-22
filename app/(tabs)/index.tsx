@@ -264,12 +264,12 @@ export default function DashboardScreen() {
 
   const handleActivityPress = (activity: any) => {
     // TODO: Navigate to boleta detail view
-    console.log("Activity pressed:", activity);
+    // Presiona actividad: fácil de eliminar cuando ya no se necesite la depuración.
   };
 
   const handleViewAllActivities = () => {
     // TODO: Navigate to all activities view
-    console.log("View all activities");
+    // Ver todas las actividades: útil hasta completar la implementación de todas las actividades.
   };
 
   return (

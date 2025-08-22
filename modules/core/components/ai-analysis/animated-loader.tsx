@@ -9,15 +9,17 @@ interface AnimatedLoaderProps {
   className?: string;
 }
 
-export const AnimatedLoader = ({ 
-  size = 48, 
-  color = "#3B82F6", 
-  className = "mb-6 h-24 w-24" 
+export const AnimatedLoader = ({
+  size = 48,
+  color = "#3B82F6",
+  className = "mb-6 h-24 w-24",
 }: AnimatedLoaderProps) => {
   const { animatedStyle } = useLoaderAnimation();
 
   return (
-    <View className={`${className} items-center justify-center rounded-full bg-blue-500/20`}>
+    <View
+      className={`${className} items-center justify-center rounded-full bg-blue-500/20`}
+    >
       <Animated.View style={animatedStyle}>
         <Loader2 size={size} color={color} />
       </Animated.View>

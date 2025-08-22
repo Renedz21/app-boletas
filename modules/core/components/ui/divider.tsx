@@ -8,7 +8,10 @@ interface DividerProps extends ViewProps {
 }
 
 const Divider = React.forwardRef<View, DividerProps>(
-  ({ className, orientation = "horizontal", thickness = "thin", ...props }, ref) => {
+  (
+    { className, orientation = "horizontal", thickness = "thin", ...props },
+    ref,
+  ) => {
     const thicknessStyles = {
       thin: orientation === "horizontal" ? "h-[1px]" : "w-[1px]",
       medium: orientation === "horizontal" ? "h-[2px]" : "w-[2px]",
@@ -20,14 +23,14 @@ const Divider = React.forwardRef<View, DividerProps>(
         ref={ref}
         className={cn(
           "bg-border",
-          orientation === "horizontal" ? "w-full my-2" : "h-full mx-2",
+          orientation === "horizontal" ? "my-2 w-full" : "mx-2 h-full",
           thicknessStyles[thickness],
-          className
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 Divider.displayName = "Divider";

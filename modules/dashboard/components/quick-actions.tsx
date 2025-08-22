@@ -49,9 +49,9 @@ export const QuickActions = ({ actions, columns = 4 }: QuickActionsProps) => {
             >
               {action.icon}
             </View>
-            <Text 
-              color="secondary" 
-              numberOfLines={2} 
+            <Text
+              color="secondary"
+              numberOfLines={2}
               className="text-center text-sm font-medium"
             >
               {action.label}

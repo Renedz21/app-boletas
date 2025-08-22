@@ -2,7 +2,7 @@ import { View, Image, Dimensions } from "react-native";
 import { Text } from "@/modules/core/components/ui/text";
 import { Button } from "@/modules/core/components/ui/button";
 import { RotateCcw, Check, Camera, CircleCheck } from "lucide-react-native";
-import { UploadProgress } from "./upload-progress";
+import { ConfirmationModal } from "./confirmation-modal";
 import colors from "../../constants/colors";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -13,16 +13,20 @@ interface ImagePreviewFullscreenProps {
   imagePath: string;
   onRetake: () => void;
   onConfirm: () => void;
-  isUploading?: boolean;
-  uploadProgress?: number;
+  showConfirmation: boolean;
+  isProcessing: boolean;
+  onProcessImage: () => void;
+  onCancelConfirmation: () => void;
 }
 
 export const ImagePreviewFullscreen = ({
   imagePath,
   onRetake,
   onConfirm,
-  isUploading = false,
-  uploadProgress = 0,
+  showConfirmation,
+  isProcessing,
+  onProcessImage,
+  onCancelConfirmation,
 }: ImagePreviewFullscreenProps) => {
   return (
     <View className="flex-1 items-center justify-center bg-gray-900 px-6">
@@ -57,7 +61,6 @@ export const ImagePreviewFullscreen = ({
           size="default"
           onPress={onRetake}
           icon={<RotateCcw size={20} color={colors.primary.default} />}
-          disabled={isUploading}
         />
         <Button
           className="flex-row gap-2"
@@ -66,7 +69,6 @@ export const ImagePreviewFullscreen = ({
           size="default"
           onPress={onConfirm}
           icon={<CircleCheck size={20} color={colors.neutral.default} />}
-          disabled={isUploading}
         />
       </View>
 
@@ -78,8 +80,13 @@ export const ImagePreviewFullscreen = ({
         </Text>
       </View>
 
-      {/* Upload Progress Overlay */}
-      <UploadProgress isUploading={isUploading} progress={uploadProgress} />
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        visible={showConfirmation}
+        onCancel={onCancelConfirmation}
+        onConfirm={onProcessImage}
+        isProcessing={isProcessing}
+      />
     </View>
   );
 };

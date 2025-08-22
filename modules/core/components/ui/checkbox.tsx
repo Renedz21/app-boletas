@@ -34,7 +34,7 @@ const Checkbox = ({
         "h-5 w-5 items-center justify-center rounded-md border-2",
         checked
           ? "border-primary-500 bg-primary-500"
-          : "border-neutral-300 bg-surface",
+          : "bg-surface border-neutral-300",
         disabled && "opacity-50",
         className,
       )}

@@ -28,13 +28,13 @@ const ProgressBar = ({ progress, className, ...props }: ProgressBarProps) => {
   return (
     <View
       className={cn(
-        "bg-neutral-secondary h-4 w-full overflow-hidden rounded-full",
+        "h-4 w-full overflow-hidden rounded-full bg-neutral-secondary",
         className,
       )}
       {...props}
     >
       <Animated.View
-        className="bg-primary-default h-full rounded-full"
+        className="h-full rounded-full bg-primary-default"
         style={progressStyle}
       />
     </View>

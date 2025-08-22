@@ -28,7 +28,7 @@ const SearchBar = React.forwardRef<TextInput, SearchBarProps>(
       placeholder = "Buscar...",
       ...props
     },
-    ref
+    ref,
   ) => {
     const handleClear = () => {
       if (onClear) {
@@ -39,21 +39,17 @@ const SearchBar = React.forwardRef<TextInput, SearchBarProps>(
     return (
       <View
         className={cn(
-          "flex-row items-center bg-input rounded-xl px-4 py-3 border border-input-border",
-          containerClassName
+          "bg-input border-input-border flex-row items-center rounded-xl border px-4 py-3",
+          containerClassName,
         )}
         {...containerProps}
       >
-        <SearchIcon
-          size={20}
-          color="#94A3B8"
-          className="mr-3"
-        />
+        <SearchIcon size={20} color="#94A3B8" className="mr-3" />
         <TextInput
           ref={ref}
           className={cn(
-            "flex-1 text-base text-text-primary placeholder:text-text-tertiary",
-            className
+            "text-text-primary placeholder:text-text-tertiary flex-1 text-base",
+            className,
           )}
           value={value}
           placeholder={placeholder}
@@ -66,15 +62,12 @@ const SearchBar = React.forwardRef<TextInput, SearchBarProps>(
             className="ml-2"
             activeOpacity={0.7}
           >
-            <XIcon
-              size={18}
-              color="#94A3B8"
-            />
+            <XIcon size={18} color="#94A3B8" />
           </TouchableOpacity>
         )}
       </View>
     );
-  }
+  },
 );
 
 SearchBar.displayName = "SearchBar";
