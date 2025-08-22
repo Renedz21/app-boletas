@@ -10,6 +10,7 @@ import { useScanMode } from "@/modules/core/hooks/use-scan-mode";
 import { useImagePreview } from "@/modules/core/hooks/use-image-preview";
 import { useGalleryPicker } from "@/modules/core/hooks/use-gallery-picker";
 import { useNavigation } from "@/modules/core/hooks/use-navigation";
+import { useImageUpload } from "@/modules/core/hooks/use-upload";
 
 // Components
 import { ScannerHeader } from "@/modules/core/components/scanner/scanner-header";
@@ -37,6 +38,7 @@ export default function ScannerScreen() {
     stopCamera,
     startCamera,
     capturePhoto,
+    isCapturing,
     // Zoom controls
     currentZoom,
     zoomIn,
@@ -55,23 +57,21 @@ export default function ScannerScreen() {
   } = useImagePreview();
   const { handleGalleryPick } = useGalleryPicker();
   const { handleBack } = useNavigation();
-
-  const [isCapturing, setIsCapturing] = useState(false);
+  const { isUploading, uploadProgress } = useImageUpload();
 
   // State for navigation
   const [currentView, setCurrentView] = useState<"scanner" | "ai-analysis">(
     "scanner",
   );
   const [imageForAnalysis, setImageForAnalysis] = useState<string>("");
+  const [aiResponse, setAiResponse] = useState<string>("");
 
   const handleCapture = useCallback(async () => {
-    setIsCapturing(true);
     const photo = await capturePhoto();
     if (photo) {
       stopCamera(); // Stop camera to save resources
       showImagePreview(photo);
     }
-    setIsCapturing(false);
   }, [capturePhoto, showImagePreview, stopCamera]);
 
   const handleRetake = useCallback(() => {
@@ -79,14 +79,19 @@ export default function ScannerScreen() {
     startCamera(); // Restart camera when retaking
   }, [hideImagePreview, startCamera]);
 
-  const handleNavigateToAnalysis = useCallback((imagePath: string) => {
-    setImageForAnalysis(imagePath);
-    setCurrentView("ai-analysis");
-  }, []);
+  const handleNavigateToAnalysis = useCallback(
+    (imagePath: string, aiResponse?: string) => {
+      setImageForAnalysis(imagePath);
+      setAiResponse(aiResponse || "");
+      setCurrentView("ai-analysis");
+    },
+    [],
+  );
 
   const handleBackFromAnalysis = useCallback(() => {
     setCurrentView("scanner");
     setImageForAnalysis("");
+    setAiResponse("");
   }, []);
 
   // Show AI Analysis screen
@@ -94,6 +99,7 @@ export default function ScannerScreen() {
     return (
       <AIAnalysisScreen
         imagePath={imageForAnalysis}
+        aiResponse={aiResponse}
         onBack={handleBackFromAnalysis}
       />
     );
@@ -116,6 +122,8 @@ export default function ScannerScreen() {
           imagePath={capturedPhoto.path}
           onRetake={handleRetake}
           onConfirm={() => confirmPhoto(handleNavigateToAnalysis)}
+          isUploading={isUploading}
+          uploadProgress={uploadProgress}
         />
       </SafeAreaView>
     );

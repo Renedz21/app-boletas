@@ -2,6 +2,7 @@ import { View, Image, Dimensions } from "react-native";
 import { Text } from "@/modules/core/components/ui/text";
 import { Button } from "@/modules/core/components/ui/button";
 import { RotateCcw, Check, Camera, CircleCheck } from "lucide-react-native";
+import { UploadProgress } from "./upload-progress";
 import colors from "../../constants/colors";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -12,12 +13,16 @@ interface ImagePreviewFullscreenProps {
   imagePath: string;
   onRetake: () => void;
   onConfirm: () => void;
+  isUploading?: boolean;
+  uploadProgress?: number;
 }
 
 export const ImagePreviewFullscreen = ({
   imagePath,
   onRetake,
   onConfirm,
+  isUploading = false,
+  uploadProgress = 0,
 }: ImagePreviewFullscreenProps) => {
   return (
     <View className="flex-1 items-center justify-center bg-gray-900 px-6">
@@ -52,6 +57,7 @@ export const ImagePreviewFullscreen = ({
           size="default"
           onPress={onRetake}
           icon={<RotateCcw size={20} color={colors.primary.default} />}
+          disabled={isUploading}
         />
         <Button
           className="flex-row gap-2"
@@ -60,6 +66,7 @@ export const ImagePreviewFullscreen = ({
           size="default"
           onPress={onConfirm}
           icon={<CircleCheck size={20} color={colors.neutral.default} />}
+          disabled={isUploading}
         />
       </View>
 
@@ -70,6 +77,9 @@ export const ImagePreviewFullscreen = ({
           Toca "Retomar" para volver a la cámara
         </Text>
       </View>
+
+      {/* Upload Progress Overlay */}
+      <UploadProgress isUploading={isUploading} progress={uploadProgress} />
     </View>
   );
 };

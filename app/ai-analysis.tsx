@@ -13,16 +13,18 @@ import { CompletedAnalysis } from "@/modules/core/components/ai-analysis/complet
 
 interface AIAnalysisScreenProps {
   imagePath: string;
+  aiResponse?: string;
   onBack: () => void;
 }
 
 export default function AIAnalysisScreen({
   imagePath,
+  aiResponse,
   onBack,
 }: AIAnalysisScreenProps) {
   // Custom hooks
   const { analysisStatus, extractedData, setStatus, resetAnalysis } =
-    useAIAnalysis();
+    useAIAnalysis(aiResponse);
   const { loading, supabaseError, handleSaveToSupabase } = useBoletaSave(
     imagePath,
     onBack,
