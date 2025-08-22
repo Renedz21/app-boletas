@@ -81,23 +81,7 @@ export const RecentActivity = ({
   );
 
   return (
-    <View className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-      {/* Header */}
-      <View className="mb-6 flex-row items-center justify-between">
-        <Text className="text-lg font-bold text-gray-900">
-          Actividad Reciente
-        </Text>
-        {onViewAllPress && (
-          <TouchableOpacity
-            onPress={onViewAllPress}
-            className="flex-row items-center"
-            activeOpacity={0.7}
-          >
-            <Text className="text-sm font-medium text-blue-600">Ver todo</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-
+    <View className="shadow-sm">
       {/* Activity List */}
       {activities.length > 0 ? (
         <FlatList

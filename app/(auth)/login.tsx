@@ -9,8 +9,10 @@ import { ProgressBar } from "@/modules/core/components/shared/progress-bar";
 import { ArrowLeft } from "lucide-react-native";
 import { WelcomeModal } from "@/modules/core/components/shared/welcome-modal";
 import useModalStore from "@/modules/stores/modal/use-modal-store";
+import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useModalStore();
 
   const {
@@ -30,6 +32,7 @@ export default function LoginScreen() {
   };
 
   const handleGoHome = () => {
+    router.replace("/(tabs)");
     // Navigate to home or main app
   };
 

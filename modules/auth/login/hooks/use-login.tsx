@@ -9,11 +9,15 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
+import { useAuth } from "@/modules/core/context/auth-context";
+import useModalStore from "@/modules/stores/modal/use-modal-store";
 
 export type LoginStep = "personalInformation" | "account";
 const STEPS: StepKeys[] = ["personalInformation", "account"];
 
 export const useLogin = () => {
+  const { signUp } = useAuth();
+  const { onOpen } = useModalStore();
   const form = useForm<z.infer<typeof fullSchema>>({
     resolver: zodResolver(fullSchema),
     defaultValues: {
@@ -21,8 +25,6 @@ export const useLogin = () => {
         avatar_url: "",
         full_name: "",
         phone_number: "",
-        gender: "Masculino",
-        birth_date: "",
       },
       account: {
         email: "",
@@ -54,7 +56,15 @@ export const useLogin = () => {
     });
   };
 
-  const handleCreateAccount = (data: z.infer<typeof fullSchema>) => {
+  const handleCreateAccount = async (data: z.infer<typeof fullSchema>) => {
+    const { success } = await signUp({
+      email: data.account.email,
+      password: data.account.password,
+    });
+
+    if (success) {
+      onOpen();
+    }
   };
 
   return {

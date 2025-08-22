@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useRouter } from "expo-router";
 import {
   FileTextIcon,
@@ -11,10 +11,8 @@ import {
   TagIcon,
   DownloadIcon,
   BellIcon,
-  Image,
   User,
 } from "lucide-react-native";
-import { Container } from "@/modules/core/components/ui/container";
 import { Header } from "@/modules/core/components/navigation/header";
 import { Text } from "@/modules/core/components/ui/text";
 import { IconButton } from "@/modules/core/components/ui/icon-button";
@@ -22,7 +20,6 @@ import { SummaryCard } from "@/modules/dashboard/components/summary-card";
 import { StatsGrid } from "@/modules/dashboard/components/stats-grid";
 import { RecentActivity } from "@/modules/dashboard/components/recent-activity";
 import { QuickActions } from "@/modules/dashboard/components/quick-actions";
-import { Card, CardContent } from "@/modules/core/components/ui/card";
 import {
   Boleta,
   TipoComprobante,
@@ -33,7 +30,6 @@ import { Category } from "@/types/category.types";
 import { UserProfile } from "@/types/user.types";
 import { FloatingActionButton } from "@/modules/core/components/ui/floating-action-button";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { scanBoleta } from "@/modules/services/ai/scan-boleta";
 
 // Dummy data using correct types
 const recentBoletas: Boleta[] = [
@@ -186,36 +182,6 @@ const categories: Omit<Category, "createdAt" | "updatedAt">[] = [
   },
 ];
 
-// Dummy data for user profile
-const userProfile: UserProfile = {
-  id: "user-1",
-  full_name: "Juan Pérez",
-  plan_type: "premium",
-  scans_used: 45,
-  scans_limit: 100,
-  subscriptionEndsAt: new Date("2024-12-31"),
-  createdAt: new Date("2024-01-01"),
-  updatedAt: new Date("2024-01-15"),
-  birthDate: new Date("1990-05-15"),
-  gender: "Masculino",
-  phone_number: "+51 999 123 456",
-};
-
-// Helper function to format timestamp
-function formatTimestamp(date: Date | null): string {
-  if (!date) return "Fecha desconocida";
-
-  const now = new Date();
-  const diffInHours = Math.floor(
-    (now.getTime() - date.getTime()) / (1000 * 60 * 60),
-  );
-
-  if (diffInHours < 1) return "Hace menos de 1 hora";
-  if (diffInHours < 24) return `Hace ${diffInHours} horas`;
-  if (diffInHours < 48) return "Ayer";
-  return `Hace ${Math.floor(diffInHours / 24)} días`;
-}
-
 // Convert boletas to activities format for RecentActivity component
 const activities = recentBoletas.map((boleta) => ({
   id: boleta.id,
@@ -274,44 +240,34 @@ export default function DashboardScreen() {
 
   return (
     <>
-      <SafeAreaView className="flex-1 bg-white px-6 ">
+      <SafeAreaView className="flex-1 bg-white px-6">
         <ScrollView
           className="flex-col gap-6"
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Header Section */}
-          <View className="">
-            <Header
-              rightAction={
-                <IconButton variant="ghost" size="md">
-                  <BellIcon size={24} color="#64748B" />
-                </IconButton>
-              }
-              leftComponent={
-                <IconButton variant="ghost" size="md">
-                  <User size={24} color="#64748B" />
-                </IconButton>
-              }
-            />
-          </View>
-
           {/* Welcome Message Section */}
-          <View className="">
-            <Text size="lg" className="mb-2 font-bold" color="primary">
-              ¡Hola, {userProfile.full_name || "Usuario"}!
+          <View className="my-8 flex-col gap-2">
+            <Text size="xxl" className="font-bold leading-6 text-gray-600">
+              Bienvenido a tu panel de control personal
             </Text>
-            <Text color="secondary" className="text-base">
-              Plan {userProfile.plan_type} • {userProfile.scans_used}/
-              {userProfile.scans_limit} escaneos usados
+            <Text size="default" className="mt-1 text-gray-500">
+              Gestiona tus boletas y mantén el control de tus gastos
             </Text>
           </View>
 
           {/* Statistics Section */}
-          <View className="">
-            <Text size="lg" className="mb-6 font-bold" color="primary">
-              Resumen del Mes
-            </Text>
+          <View className="mb-8">
+            <View className="mb-6 flex-row items-center">
+              <View className="mr-3 h-6 w-1 rounded-full bg-blue-500" />
+              <Text
+                size="xl"
+                className="font-bold text-gray-800"
+                color="primary"
+              >
+                Resumen del Mes
+              </Text>
+            </View>
             <StatsGrid columns={2}>
               <SummaryCard
                 title="Total Boletas"
@@ -348,20 +304,18 @@ export default function DashboardScreen() {
             </StatsGrid>
           </View>
 
-          {/* Quick Actions Section */}
-          <View className="">
-            <Text size="lg" className="mb-6 font-bold" color="primary">
-              Acciones Rápidas
-            </Text>
-            <QuickActions actions={quickActions} />
-          </View>
-
-          <TouchableOpacity onPress={() => scanBoleta()}>
-            <Text className="text-blue-500">Scan Boleta</Text>
-          </TouchableOpacity>
-
           {/* Recent Activity Section */}
-          <View className="">
+          <View className="mb-8">
+            <View className="mb-6 flex-row items-center">
+              <View className="mr-3 h-6 w-1 rounded-full bg-teal-500" />
+              <Text
+                size="xl"
+                className="font-bold text-gray-800"
+                color="primary"
+              >
+                Actividad Reciente
+              </Text>
+            </View>
             <RecentActivity
               activities={activities}
               onActivityPress={handleActivityPress}
