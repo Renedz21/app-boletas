@@ -21,6 +21,7 @@ interface SummaryCardProps {
 export const SummaryCard = ({
   title,
   value,
+  subtitle,
   icon,
   trend,
   color = "primary",
@@ -54,44 +55,55 @@ export const SummaryCard = ({
 
   return (
     <CardWrapper onPress={onPress} activeOpacity={0.9}>
-      <Card className={cn("h-36 p-4", colorClasses[color])}>
-        <View className="flex-row items-start justify-between">
-          <View className="flex-1">
+      <Card className={cn("h-44 p-6", colorClasses[color])}>
+        {/* Header with icon and title */}
+        <View className="flex-row items-start justify-between mb-4">
+          <View className="flex-1 pr-3">
             <Text
               color="secondary"
-              className={cn("mb-1 font-medium", textColorClasses[color])}
+              className={cn("mb-2 text-sm font-medium", textColorClasses[color])}
             >
               {title}
             </Text>
-            <View className="flex-row items-end justify-between">
+            {subtitle && (
               <Text
-                size="big"
-                className={cn("font-semibold", textColorClasses[color])}
+                className="text-xs text-gray-500"
+                color="secondary"
               >
-                {value}
+                {subtitle}
               </Text>
-              {trend && (
-                <View className="flex-row items-center">
-                  {trend.isPositive ? (
-                    <ArrowUpIcon size={12} color="#22C55E" />
-                  ) : (
-                    <ArrowDownIcon size={12} color="#EF4444" />
-                  )}
-                  <Text
-                    className={cn(
-                      "ml-1 text-sm",
-                      trend.isPositive ? "text-success-500" : "text-error-500",
-                    )}
-                  >
-                    {trend.value}%
-                  </Text>
-                </View>
-              )}
-            </View>
+            )}
           </View>
           {icon && (
             <View className={cn("rounded-full p-3", iconColorClasses[color])}>
               {icon}
+            </View>
+          )}
+        </View>
+
+        {/* Value and trend */}
+        <View className="flex-row items-end justify-between">
+          <Text
+            size="big"
+            className={cn("font-bold", textColorClasses[color])}
+          >
+            {value}
+          </Text>
+          {trend && (
+            <View className="flex-row items-center bg-white/50 rounded-full px-3 py-2">
+              {trend.isPositive ? (
+                <ArrowUpIcon size={14} color="#22C55E" />
+              ) : (
+                <ArrowDownIcon size={14} color="#EF4444" />
+              )}
+              <Text
+                className={cn(
+                  "ml-1 text-sm font-medium",
+                  trend.isPositive ? "text-success-500" : "text-error-500",
+                )}
+              >
+                {trend.value}%
+              </Text>
             </View>
           )}
         </View>

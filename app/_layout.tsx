@@ -6,6 +6,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import "../global.css";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const isAuthenticated = true;
 
@@ -30,7 +31,9 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <InitialLayout />
+        <BottomSheetModalProvider>
+          <InitialLayout />
+        </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

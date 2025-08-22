@@ -84,7 +84,7 @@ export function WelcomeModal({
           <View className="flex-col items-center">
             <View className="relative">
               {/* Main Circle */}
-              <View className="bg-primary-default mb-4 h-20 w-20 items-center justify-center rounded-full">
+              <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-primary-default">
                 <Check size={40} color="#FFFFFF" strokeWidth={2} />
               </View>
             </View>

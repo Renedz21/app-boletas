@@ -25,12 +25,12 @@ export const QuickActions = ({ actions, columns = 4 }: QuickActionsProps) => {
   };
 
   return (
-    <View className="-mx-2 flex-row flex-wrap">
+    <View className="-mx-3 flex-row flex-wrap">
       {actions.map((action) => (
         <View
           key={action.id}
           className={cn(
-            "mb-4 px-2",
+            "mb-6 px-3",
             columns === 2 && "w-1/2",
             columns === 3 && "w-1/3",
             columns === 4 && "w-1/4",
@@ -43,13 +43,17 @@ export const QuickActions = ({ actions, columns = 4 }: QuickActionsProps) => {
           >
             <View
               className={cn(
-                "mb-2 h-16 w-16 items-center justify-center rounded-2xl",
+                "mb-3 h-20 w-20 items-center justify-center rounded-2xl shadow-sm",
                 colorClasses[action.color || "primary"],
               )}
             >
               {action.icon}
             </View>
-            <Text color="secondary" numberOfLines={2}>
+            <Text 
+              color="secondary" 
+              numberOfLines={2} 
+              className="text-center text-sm font-medium"
+            >
               {action.label}
             </Text>
           </TouchableOpacity>

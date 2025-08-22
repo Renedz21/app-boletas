@@ -38,6 +38,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   title?: string;
   loading?: boolean;
+  icon?: React.ReactNode;
 }
 
 const Button = ({
@@ -48,6 +49,7 @@ const Button = ({
   loading = false,
   disabled = false,
   title,
+  icon,
   ...props
 }: ButtonProps) => {
   return (
@@ -62,6 +64,7 @@ const Button = ({
           color={variant === "primary" ? "#FFFFFF" : "#3B82F6"}
         />
       )}
+      {icon && icon}
       {title && (
         <Text
           color={

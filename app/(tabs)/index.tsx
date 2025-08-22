@@ -220,11 +220,11 @@ const activities = recentBoletas.map((boleta) => ({
   id: boleta.id,
   title: `${boleta.tipo_comprobante.toUpperCase()} #${boleta.serie}-${boleta.numero}`,
   description: `${boleta.razon_social} - ${boleta.subcategoria || "Sin categoría"}`,
-  timestamp: formatTimestamp(boleta.createdAt),
+  timestamp: boleta.createdAt?.toISOString() || new Date().toISOString(),
   status: boleta.revisado_manualmente
     ? ("completed" as const)
     : ("pending" as const),
-  type: boleta.subcategoria || "Sin categoría",
+  type: boleta.tipo_comprobante || "boleta",
 }));
 
 export default function DashboardScreen() {
@@ -261,83 +261,112 @@ export default function DashboardScreen() {
     },
   ];
 
+  const handleActivityPress = (activity: any) => {
+    // TODO: Navigate to boleta detail view
+    console.log("Activity pressed:", activity);
+  };
+
+  const handleViewAllActivities = () => {
+    // TODO: Navigate to all activities view
+    console.log("View all activities");
+  };
+
   return (
     <>
-      <SafeAreaView className="flex-1 bg-white px-6">
+      <SafeAreaView className="flex-1 bg-white px-6 ">
         <ScrollView
-          className="flex-1"
+          className="flex-col gap-6"
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          <Header
-            rightAction={
-              <IconButton variant="ghost" size="md">
-                <BellIcon size={24} color="#64748B" />
-              </IconButton>
-            }
-            leftComponent={
-              <IconButton variant="ghost" size="md">
-                <User size={24} color="#64748B" />
-              </IconButton>
-            }
-          />
+          {/* Header Section */}
+          <View className="">
+            <Header
+              rightAction={
+                <IconButton variant="ghost" size="md">
+                  <BellIcon size={24} color="#64748B" />
+                </IconButton>
+              }
+              leftComponent={
+                <IconButton variant="ghost" size="md">
+                  <User size={24} color="#64748B" />
+                </IconButton>
+              }
+            />
+          </View>
 
-          {/* Mensaje de bienvenida */}
-          <View className="mb-4">
-            <Text size="lg" className="mb-1 font-semibold" color="primary">
-              Hola, {userProfile.full_name || "Usuario"}!
+          {/* Welcome Message Section */}
+          <View className="">
+            <Text size="lg" className="mb-2 font-bold" color="primary">
+              ¡Hola, {userProfile.full_name || "Usuario"}!
             </Text>
-            <Text color={"secondary"}>
+            <Text color="secondary" className="text-base">
               Plan {userProfile.plan_type} • {userProfile.scans_used}/
               {userProfile.scans_limit} escaneos usados
             </Text>
           </View>
 
-          {/* Estadísticas */}
-          <StatsGrid columns={2} className="mb-4">
-            <SummaryCard
-              title="Total Boletas"
-              value={recentBoletas.length.toString()}
-              subtitle="Este mes"
-              icon={<FileTextIcon size={24} color="#3B82F6" />}
-              trend={{ value: 12, isPositive: true }}
-              color="primary"
-            />
-            <SummaryCard
-              title="Gasto Total"
-              value={`S/ ${recentBoletas.reduce((sum, boleta) => sum + boleta.total, 0).toFixed(2)}`}
-              subtitle="Últimos 30 días"
-              icon={<TrendingUpIcon size={24} color="#A855F7" />}
-              trend={{ value: 8, isPositive: false }}
-              color="secondary"
-            />
-            <SummaryCard
-              title="Categorías Activas"
-              value={categories.filter((cat) => cat.activo).length.toString()}
-              subtitle="Activas"
-              icon={<FolderIcon size={24} color="#14B8A6" />}
-              color="accent"
-            />
-            <SummaryCard
-              title="Gastos Deducibles"
-              value={recentBoletas
-                .filter((boleta) => boleta.es_gasto_deducible)
-                .length.toString()}
-              subtitle="Gastos deducibles"
-              icon={<CalendarIcon size={24} color="#F59E0B" />}
-              color="warning"
-            />
-          </StatsGrid>
+          {/* Statistics Section */}
+          <View className="">
+            <Text size="lg" className="mb-6 font-bold" color="primary">
+              Resumen del Mes
+            </Text>
+            <StatsGrid columns={2}>
+              <SummaryCard
+                title="Total Boletas"
+                value={recentBoletas.length.toString()}
+                subtitle="Este mes"
+                icon={<FileTextIcon size={24} color="#3B82F6" />}
+                trend={{ value: 12, isPositive: true }}
+                color="primary"
+              />
+              <SummaryCard
+                title="Gasto Total"
+                value={`S/ ${recentBoletas.reduce((sum, boleta) => sum + boleta.total, 0).toFixed(2)}`}
+                subtitle="Últimos 30 días"
+                icon={<TrendingUpIcon size={24} color="#A855F7" />}
+                trend={{ value: 8, isPositive: false }}
+                color="secondary"
+              />
+              <SummaryCard
+                title="Categorías Activas"
+                value={categories.filter((cat) => cat.activo).length.toString()}
+                subtitle="Activas"
+                icon={<FolderIcon size={24} color="#14B8A6" />}
+                color="accent"
+              />
+              <SummaryCard
+                title="Gastos Deducibles"
+                value={recentBoletas
+                  .filter((boleta) => boleta.es_gasto_deducible)
+                  .length.toString()}
+                subtitle="Gastos deducibles"
+                icon={<CalendarIcon size={24} color="#F59E0B" />}
+                color="warning"
+              />
+            </StatsGrid>
+          </View>
 
-          {/* Acciones rápidas */}
-          <View className="mb-4">
-            <Text size="lg" className="mb-4 font-semibold" color="primary">
+          {/* Quick Actions Section */}
+          <View className="">
+            <Text size="lg" className="mb-6 font-bold" color="primary">
               Acciones Rápidas
             </Text>
             <QuickActions actions={quickActions} />
           </View>
+
+          {/* Recent Activity Section */}
+          <View className="">
+            <RecentActivity
+              activities={activities}
+              onActivityPress={handleActivityPress}
+              onViewAllPress={handleViewAllActivities}
+            />
+          </View>
         </ScrollView>
-        <View className="relative">
+
+        {/* Floating Action Button */}
+        <View className="absolute bottom-6 right-6">
           <FloatingActionButton
             size="lg"
             icon={<CameraIcon size={32} color="#FFFFFF" />}

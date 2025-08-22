@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "app-boletas",
-    "slug": "app-boletas",
+    "name": "report-ai",
+    "slug": "report-ai",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "app-boletas",
+    "scheme": "report-ai",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,7 +14,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "La aplicación ReportAI necesita acceso a tu cámara."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +25,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.edzon2121.appboletas"
+      "package": "com.swiftkeys.reportai",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.CAMERA"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -33,12 +40,24 @@
       [
         "react-native-vision-camera",
         {
-          "cameraPermissionText": "La aplicación de boletas necesita acceso a tu cámara."
+          "cameraPermissionText": "La aplicación ReportAI necesita acceso a tu cámara."
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "916ac195-4ee4-4623-8ea3-10073c216bc5"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/916ac195-4ee4-4623-8ea3-10073c216bc5"
     }
   }
 }
