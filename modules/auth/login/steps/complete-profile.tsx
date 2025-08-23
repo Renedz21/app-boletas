@@ -1,4 +1,3 @@
-import { View } from "react-native";
 import { useFormContext } from "react-hook-form";
 import { FormValues } from "@/modules/schemas/login.schema";
 import {
@@ -17,7 +16,7 @@ export default function CompleteProfileStep() {
   } = useFormContext<FormValues>();
 
   return (
-    <View className="flex-col gap-8">
+    <>
       <FormField
         control={control}
         name="personalInformation.full_name"
@@ -34,7 +33,9 @@ export default function CompleteProfileStep() {
                 onChangeText={field.onChange}
               />
             </FormControl>
-            <FormMessage>{errors.root?.message}</FormMessage>
+            <FormMessage className="text-error-500">
+              {errors.root?.message}
+            </FormMessage>
           </FormItem>
         )}
       />
@@ -46,18 +47,21 @@ export default function CompleteProfileStep() {
             <FormLabel>Teléfono</FormLabel>
             <FormControl>
               <Input
-                keyboardType="default"
-                inputMode="text"
+                keyboardType="phone-pad"
+                inputMode="numeric"
                 placeholder="Ingrese su teléfono"
                 {...field}
                 value={field.value}
                 onChangeText={field.onChange}
+                underlineColorAndroid="transparent"
               />
             </FormControl>
-            <FormMessage>{errors.root?.message}</FormMessage>
+            <FormMessage className="text-error-500">
+              {errors.root?.message}
+            </FormMessage>
           </FormItem>
         )}
       />
-    </View>
+    </>
   );
 }

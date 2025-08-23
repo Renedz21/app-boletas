@@ -9,7 +9,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "flex-row items-center justify-center rounded-full active:opacity-80 transition-opacity disabled:opacity-50",
+  "flex-row items-center justify-center rounded-full active:opacity-80 disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -47,8 +47,8 @@ const Button = ({
   variant = "primary",
   size = "default",
   children,
-  loading = false,
-  disabled = false,
+  loading,
+  disabled,
   title,
   icon,
   ...props
@@ -56,7 +56,7 @@ const Button = ({
   return (
     <TouchableOpacity
       className={cn(buttonVariants({ variant, size }), className)}
-      disabled={disabled || loading}
+      disabled={disabled}
       {...props}
     >
       {loading && (

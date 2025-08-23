@@ -7,7 +7,7 @@ interface LabelProps extends TextProps {
 }
 
 const labelVariants = cva(
-  "text-base font-medium leading-none peer-disabled:opacity-70",
+  "text-xl font-medium leading-none peer-disabled:opacity-70 data-[error=true]:text-error-500",
 );
 
 const Label = ({ children, className, ...props }: LabelProps) => {

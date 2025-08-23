@@ -1,32 +1,42 @@
-import { View, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import { Text } from "@/modules/core/components/ui/text";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FormProvider } from "react-hook-form";
-import StepContent from "@/modules/auth/login/steps/step-content";
-import { useLogin } from "@/modules/auth/login/hooks/use-login";
+import { useAuthActions } from "@/modules/auth/login/hooks/use-auth-actions";
 import { Button } from "@/modules/core/components/ui/button";
-import { ProgressBar } from "@/modules/core/components/shared/progress-bar";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react-native";
+import {
+  Form,
+  FormField,
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/modules/core/components/ui/form";
+import { Input } from "@/modules/core/components/ui/input";
+import { useState } from "react";
+import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
-  const {
-    form,
-    currentStep,
-    handleNextStep,
-    progressPercentage,
-    isLastStep,
-    handleCreateAccount,
-    handleLogin,
-  } = useLogin();
-
-  const handleCreateAccountClick = async () => {
-    const isValid = await form.trigger();
-    if (isValid) {
-      const formData = form.getValues();
-      console.log("Form data:", formData);
-      await handleCreateAccount(formData);
-    } else {
-      console.log("Form validation failed");
+  const { loginForm, handleLogin } = useAuthActions();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const handleSignIn = async () => {
+    const formData = loginForm.getValues();
+    try {
+      await handleLogin({
+        email: formData.email,
+        password: formData.password,
+      });
+    } catch (error) {
+      setError(
+        "Ocurrió un error al iniciar sesión. Revisa tus credenciales.  ",
+      );
     }
   };
 
@@ -34,41 +44,113 @@ export default function LoginScreen() {
     <SafeAreaView className="flex-1 bg-white px-6">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
+        className="flex-1 flex-col gap-4"
+        keyboardVerticalOffset={100}
       >
-        {/* Progress Bar */}
-        <View className="my-8 flex-row items-center justify-between gap-4">
-          <ArrowLeft size={24} color={"#4c68ff"} />
-          <ProgressBar progress={progressPercentage} className="w-1/2" />
-          <View className="w-auto" />
-        </View>
+        {/* Back Button */}
+        <TouchableOpacity className="mb-6 mt-2" onPress={() => router.back()}>
+          <ArrowLeft size={24} color="#000" />
+        </TouchableOpacity>
 
         {/* Header */}
-        <View className="flex-col gap-4">
-          <Text size="big" color={"secondary"} className="font-bold">
-            {currentStep === "personalInformation"
-              ? "Completa tu perfil"
-              : "Crea tu cuenta"}
-          </Text>
-          <Text color={"secondary"} size="lg">
-            {currentStep === "account"
-              ? "Ingresa tu email y contraseña. Si olvidaste tu contraseña, puedes recuperarla más adelante."
-              : "No te preocupes. Solo tú puedes ver tus información personal. Nadie más podrá verla."}
+        <View className="mb-8 flex-col gap-4">
+          <Text className="text-4xl font-bold text-gray-900">Hola 👋</Text>
+          <Text color="secondary" size="xl">
+            Ingresa tu email y contraseña para iniciar sesión.
           </Text>
         </View>
 
         {/* Form */}
-        <View className="mt-8 flex-1 flex-col gap-4">
-          <FormProvider {...form}>
-            <StepContent stepKey={currentStep} />
-            <View className="mt-4 w-full">
-              <Button
-                title={isLastStep ? "Crear cuenta" : "Siguiente"}
-                onPress={isLastStep ? handleCreateAccountClick : handleNextStep}
-                variant="primary"
+        <View className="flex-1">
+          <Form {...loginForm}>
+            <View className="flex-col gap-10">
+              <FormField
+                control={loginForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        keyboardType="email-address"
+                        inputMode="email"
+                        placeholder="Ingresa tu email"
+                        autoCapitalize="none"
+                        autoComplete="email"
+                        autoCorrect={false}
+                        autoFocus={true}
+                        readOnly={loginForm.formState.isSubmitting}
+                        {...field}
+                        value={field.value}
+                        onChangeText={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage>
+                      {loginForm.formState.errors.email?.message}
+                    </FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={loginForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contraseña</FormLabel>
+                    <FormControl>
+                      <View className="relative">
+                        <Input
+                          inputMode="text"
+                          secureTextEntry={!showPassword}
+                          placeholder="Ingresa tu contraseña"
+                          readOnly={loginForm.formState.isSubmitting}
+                          autoCapitalize="none"
+                          autoComplete="password"
+                          autoCorrect={false}
+                          autoFocus={false}
+                          {...field}
+                          value={field.value}
+                          onChangeText={field.onChange}
+                        />
+                        <TouchableOpacity
+                          className="absolute right-0 top-3"
+                          onPress={() => setShowPassword((prev) => !prev)}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={24} color="#6B7280" />
+                          ) : (
+                            <Eye size={24} color="#6B7280" />
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                    </FormControl>
+                    <FormMessage>
+                      {loginForm.formState.errors.password?.message}
+                    </FormMessage>
+                  </FormItem>
+                )}
               />
             </View>
-          </FormProvider>
+          </Form>
+
+          {error && (
+            <View className="my-8 rounded-lg bg-error-50 p-4">
+              <Text size="xl" className="text-error-500">
+                {error}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Sign In Button */}
+        <View className="mb-6">
+          <Button
+            title="Iniciar sesión"
+            onPress={handleSignIn}
+            disabled={loginForm.formState.isSubmitting}
+            loading={loginForm.formState.isSubmitting}
+          />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

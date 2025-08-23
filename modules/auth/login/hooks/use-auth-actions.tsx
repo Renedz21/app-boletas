@@ -2,9 +2,7 @@ import { useForm } from "react-hook-form";
 import {
   fullSchema,
   StepKeys,
-  FormValues,
-  accountSchema,
-  personalSchema,
+  loginSchema,
 } from "@/modules/schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,7 +13,7 @@ import { useRouter } from "expo-router";
 export type LoginStep = "personalInformation" | "account";
 const STEPS: StepKeys[] = ["personalInformation", "account"];
 
-export const useLogin = () => {
+export const useAuthActions = () => {
   const { signUp, signIn } = useAuth();
   const router = useRouter();
   const form = useForm<z.infer<typeof fullSchema>>({
@@ -33,14 +31,27 @@ export const useLogin = () => {
       },
     },
   });
+  const loginForm = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
   const [currentStep, setCurrentStep] = useState<LoginStep>(
     "personalInformation",
   );
   const isLastStep = currentStep === "account";
   const progressPercentage =
     ((STEPS.indexOf(currentStep) + 1) / STEPS.length) * 100;
+  const handleNextStep = async () => {
+    if (currentStep === "personalInformation") {
+      const isValid = await form.trigger("personalInformation");
+      if (!isValid) {
+        return;
+      }
+    }
 
-  const handleNextStep = () => {
     setCurrentStep((prev) => {
       const nextStep =
         prev === "personalInformation" ? "account" : "personalInformation";
@@ -74,16 +85,25 @@ export const useLogin = () => {
     }
   };
 
-  const handleLogin = async (data: z.infer<typeof fullSchema>) => {
-    await signIn({
-      email: data.account.email,
-      password: data.account.password,
-    });
-    router.replace("/confirmation");
+  const handleLogin = async (data: z.infer<typeof loginSchema>) => {
+    const isValid = await loginForm.trigger();
+    if (!isValid) {
+      return;
+    }
+
+    try {
+      await signIn({
+        email: data.email,
+        password: data.password,
+      });
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
   };
 
   return {
     form,
+    loginForm,
     steps: STEPS,
     currentStep,
     setCurrentStep,

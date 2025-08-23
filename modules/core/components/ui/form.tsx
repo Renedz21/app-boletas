@@ -99,7 +99,7 @@ const FormLabel = ({ className, children, ...props }: FormLabelProps) => {
       id={formItemId}
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      className={cn("data-[error=true]:text-error-500", className)}
       {...props}
     >
       {children}
@@ -157,7 +157,7 @@ const FormMessage = ({ className, children, ...props }: FormMessageProps) => {
     <Text
       id={formMessageId}
       data-slot="form-message"
-      className={cn("text-destructive text-sm", className)}
+      className={cn("text-base text-error-500", className)}
       {...props}
     >
       {body}

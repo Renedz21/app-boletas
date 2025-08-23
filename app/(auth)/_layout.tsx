@@ -4,9 +4,10 @@ export default function AuthLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="login" options={{ title: "Login" }} />
-      <Stack.Screen name="success" options={{ title: "Success" }} />
-      <Stack.Screen name="payment" options={{ title: "Payment" }} />
+      <Stack.Screen name="login" options={{ title: "Iniciar sesión" }} />
+      <Stack.Screen name="register" options={{ title: "Regístrate" }} />
+      <Stack.Screen name="success" options={{ title: "Éxito" }} />
+      <Stack.Screen name="payment" options={{ title: "Pago" }} />
     </Stack>
   );
 }
