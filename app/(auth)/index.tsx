@@ -19,7 +19,7 @@ export default function AuthScreen() {
 
         <Button
           title="Iniciar sesión con correo"
-          onPress={() => router.push("/login")}
+          onPress={() => router.push("/(auth)/login")}
         />
 
         <View className="flex-row items-center justify-center gap-2">

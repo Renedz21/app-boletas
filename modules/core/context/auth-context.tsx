@@ -24,15 +24,15 @@ type SignInProps = {
 type SignUpProps = {
   email: string;
   password: string;
+  userData: {
+    full_name?: string;
+    phone_number?: string;
+  };
 };
 
 type AuthContextType = {
-  signIn: (
-    props: SignInProps,
-  ) => Promise<{ success: boolean; isNewUser: boolean }>;
-  signUp: (
-    props: SignUpProps,
-  ) => Promise<{ success: boolean; isNewUser: boolean }>;
+  signIn: (props: SignInProps) => Promise<void>;
+  signUp: (props: SignUpProps) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 } & AuthState;
@@ -42,8 +42,8 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   token: undefined,
   isLoading: true,
-  signIn: () => Promise.resolve({ success: false, isNewUser: false }),
-  signUp: () => Promise.resolve({ success: false, isNewUser: false }),
+  signIn: () => Promise.resolve(),
+  signUp: () => Promise.resolve(),
   signInWithGoogle: () => Promise.resolve(),
   signOut: () => Promise.resolve(),
 });
@@ -63,16 +63,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Inicializar sesión y escuchar cambios usando tu approach
   useEffect(() => {
-    // Obtener sesión inicial
     supabase.auth.getSession().then(({ data: { session } }) => {
       setToken(session?.access_token);
       setUser(session?.user ?? null);
       setIsLoading(false);
     });
 
-    // Escuchar cambios de autenticación con tu implementación
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -106,29 +103,36 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         password,
       });
       if (error) throw error;
-      return { success: true, isNewUser: false };
-      // El estado se actualiza automáticamente por onAuthStateChange
     } catch (error) {
+      console.log("Error in signIn", error);
       setIsLoading(false);
       throw error;
     }
   }, []);
 
-  const signUp = useCallback(async ({ email, password }: SignUpProps) => {
-    setIsLoading(true);
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (error) throw error;
-      return { success: true, isNewUser: true };
-      // El estado se actualiza automáticamente por onAuthStateChange
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-  }, []);
+  const signUp = useCallback(
+    async ({ email, password, userData }: SignUpProps) => {
+      setIsLoading(true);
+      try {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: userData.full_name,
+              phone_number: userData.phone_number,
+            },
+          },
+        });
+        if (error) throw error;
+      } catch (error) {
+        console.log("Error in signUp", error);
+        setIsLoading(false);
+        throw error;
+      }
+    },
+    [],
+  );
 
   const signInWithGoogle = useCallback(async () => {
     setIsLoading(true);
@@ -136,12 +140,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: "exp://127.0.0.1:19000", // Para desarrollo con Expo
-          // En producción: "tu-app-scheme://auth/callback"
+          redirectTo: "exp://127.0.0.1:19000",
         },
       });
       if (error) throw error;
-      // El estado se actualiza automáticamente por onAuthStateChange
     } catch (error) {
       setIsLoading(false);
       throw error;
@@ -153,7 +155,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      // El estado se actualiza automáticamente por onAuthStateChange
     } catch (error) {
       setIsLoading(false);
       throw error;

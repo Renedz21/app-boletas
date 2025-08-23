@@ -10,14 +10,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { useAuth } from "@/modules/core/context/auth-context";
-import useModalStore from "@/modules/stores/modal/use-modal-store";
+import { useRouter } from "expo-router";
 
 export type LoginStep = "personalInformation" | "account";
 const STEPS: StepKeys[] = ["personalInformation", "account"];
 
 export const useLogin = () => {
-  const { signUp } = useAuth();
-  const { onOpen } = useModalStore();
+  const { signUp, signIn } = useAuth();
+  const router = useRouter();
   const form = useForm<z.infer<typeof fullSchema>>({
     resolver: zodResolver(fullSchema),
     defaultValues: {
@@ -57,14 +57,29 @@ export const useLogin = () => {
   };
 
   const handleCreateAccount = async (data: z.infer<typeof fullSchema>) => {
-    const { success } = await signUp({
+    try {
+      console.log("Attempting to create account...");
+      await signUp({
+        email: data.account.email,
+        password: data.account.password,
+        userData: {
+          full_name: data.personalInformation.full_name,
+          phone_number: data.personalInformation.phone_number,
+        },
+      });
+
+      router.replace("/confirmation");
+    } catch (error) {
+      console.error("Error creating account:", error);
+    }
+  };
+
+  const handleLogin = async (data: z.infer<typeof fullSchema>) => {
+    await signIn({
       email: data.account.email,
       password: data.account.password,
     });
-
-    if (success) {
-      onOpen();
-    }
+    router.replace("/confirmation");
   };
 
   return {
@@ -77,5 +92,6 @@ export const useLogin = () => {
     progressPercentage,
     isLastStep,
     handleCreateAccount,
+    handleLogin,
   };
 };
