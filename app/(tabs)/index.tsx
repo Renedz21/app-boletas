@@ -6,20 +6,12 @@ import {
   CameraIcon,
   FolderIcon,
   TrendingUpIcon,
-  UploadIcon,
   CalendarIcon,
-  TagIcon,
-  DownloadIcon,
-  BellIcon,
-  User,
 } from "lucide-react-native";
-import { Header } from "@/modules/core/components/navigation/header";
 import { Text } from "@/modules/core/components/ui/text";
-import { IconButton } from "@/modules/core/components/ui/icon-button";
 import { SummaryCard } from "@/modules/dashboard/components/summary-card";
 import { StatsGrid } from "@/modules/dashboard/components/stats-grid";
 import { RecentActivity } from "@/modules/dashboard/components/recent-activity";
-import { QuickActions } from "@/modules/dashboard/components/quick-actions";
 import {
   Boleta,
   TipoComprobante,
@@ -27,7 +19,6 @@ import {
   MetodoPago,
 } from "@/types/boleta.types";
 import { Category } from "@/types/category.types";
-import { UserProfile } from "@/types/user.types";
 import { FloatingActionButton } from "@/modules/core/components/ui/floating-action-button";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -196,37 +187,6 @@ const activities = recentBoletas.map((boleta) => ({
 
 export default function DashboardScreen() {
   const router = useRouter();
-
-  const quickActions = [
-    {
-      id: "1",
-      label: "Escanear",
-      icon: <CameraIcon size={24} color="#3B82F6" />,
-      color: "primary" as const,
-      onPress: () => router.push("/"),
-    },
-    {
-      id: "2",
-      label: "Subir",
-      icon: <UploadIcon size={24} color="#A855F7" />,
-      color: "secondary" as const,
-      onPress: () => {},
-    },
-    {
-      id: "3",
-      label: "Categorías",
-      icon: <TagIcon size={24} color="#14B8A6" />,
-      color: "accent" as const,
-      onPress: () => {},
-    },
-    {
-      id: "4",
-      label: "Exportar",
-      icon: <DownloadIcon size={24} color="#22C55E" />,
-      color: "success" as const,
-      onPress: () => {},
-    },
-  ];
 
   const handleActivityPress = (activity: any) => {
     // TODO: Navigate to boleta detail view

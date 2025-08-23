@@ -1,5 +1,4 @@
 import { View } from "react-native";
-import { Text } from "@/modules/core/components/ui/text";
 import { useFormContext } from "react-hook-form";
 import { FormValues } from "@/modules/schemas/login.schema";
 import {
@@ -14,10 +13,10 @@ import { Input } from "@/modules/core/components/ui/input";
 export default function CreateAccountStep() {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useFormContext<FormValues>();
   return (
-    <View className="flex-col gap-8">
+    <>
       <FormField
         control={control}
         name="account.email"
@@ -29,12 +28,17 @@ export default function CreateAccountStep() {
                 keyboardType="default"
                 inputMode="text"
                 placeholder="Ingrese su correo electrónico"
+                autoCapitalize="none"
+                autoComplete="email"
+                autoCorrect={false}
+                autoFocus={false}
+                readOnly={isSubmitting}
                 {...field}
                 value={field.value}
                 onChangeText={field.onChange}
               />
             </FormControl>
-            <FormMessage>{errors.root?.message}</FormMessage>
+            <FormMessage>{errors.account?.email?.message}</FormMessage>
           </FormItem>
         )}
       />
@@ -46,16 +50,23 @@ export default function CreateAccountStep() {
             <FormLabel>Contraseña</FormLabel>
             <FormControl>
               <Input
-                keyboardType="default"
+                keyboardType="visible-password"
                 inputMode="text"
                 placeholder="Ingrese su contraseña"
+                autoCapitalize="none"
+                autoComplete="password"
+                autoCorrect={false}
+                autoFocus={false}
+                readOnly={isSubmitting}
                 secureTextEntry={true}
                 {...field}
                 value={field.value}
                 onChangeText={field.onChange}
               />
             </FormControl>
-            <FormMessage>{errors.root?.message}</FormMessage>
+            <FormMessage>
+              {errors.account?.confirm_password?.message}
+            </FormMessage>
           </FormItem>
         )}
       />
@@ -67,19 +78,23 @@ export default function CreateAccountStep() {
             <FormLabel>Confirmar contraseña</FormLabel>
             <FormControl>
               <Input
-                keyboardType="default"
+                keyboardType="visible-password"
                 inputMode="text"
                 placeholder="Confirme su contraseña"
-                secureTextEntry={true}
+                autoCapitalize="none"
+                autoComplete="password"
+                autoCorrect={false}
+                autoFocus={false}
+                readOnly={isSubmitting}
                 {...field}
                 value={field.value}
                 onChangeText={field.onChange}
               />
             </FormControl>
-            <FormMessage>{errors.root?.message}</FormMessage>
+            <FormMessage>{errors.account?.password?.message}</FormMessage>
           </FormItem>
         )}
       />
-    </View>
+    </>
   );
 }
