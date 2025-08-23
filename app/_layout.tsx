@@ -38,8 +38,13 @@ function InitialLayout() {
         </Stack.Protected>
         <Stack.Protected guard={isAuthenticated}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="confirmation"
+            options={{ title: "Confirmación de pago" }}
+          />
+          <Stack.Screen name="payment" options={{ title: "Pago" }} />
+          <Stack.Screen name="scanner" options={{ headerShown: false }} />
         </Stack.Protected>
-        <Stack.Screen name="scanner" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="dark" />
     </>
@@ -48,14 +53,14 @@ function InitialLayout() {
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <BottomSheetModalProvider>
-          <AuthProvider>
+    <AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <BottomSheetModalProvider>
             <InitialLayout />
-          </AuthProvider>
-        </BottomSheetModalProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+          </BottomSheetModalProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </AuthProvider>
   );
 }

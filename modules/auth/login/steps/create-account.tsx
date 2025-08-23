@@ -49,6 +49,7 @@ export default function CreateAccountStep() {
                 keyboardType="default"
                 inputMode="text"
                 placeholder="Ingrese su contraseña"
+                secureTextEntry={true}
                 {...field}
                 value={field.value}
                 onChangeText={field.onChange}
@@ -68,7 +69,8 @@ export default function CreateAccountStep() {
               <Input
                 keyboardType="default"
                 inputMode="text"
-                placeholder="Ingrese su contraseña"
+                placeholder="Confirme su contraseña"
+                secureTextEntry={true}
                 {...field}
                 value={field.value}
                 onChangeText={field.onChange}

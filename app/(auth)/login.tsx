@@ -7,14 +7,8 @@ import { useLogin } from "@/modules/auth/login/hooks/use-login";
 import { Button } from "@/modules/core/components/ui/button";
 import { ProgressBar } from "@/modules/core/components/shared/progress-bar";
 import { ArrowLeft } from "lucide-react-native";
-import { WelcomeModal } from "@/modules/core/components/shared/welcome-modal";
-import useModalStore from "@/modules/stores/modal/use-modal-store";
-import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
-  const router = useRouter();
-  const { isOpen, onOpen, onClose } = useModalStore();
-
   const {
     form,
     currentStep,
@@ -22,18 +16,18 @@ export default function LoginScreen() {
     progressPercentage,
     isLastStep,
     handleCreateAccount,
+    handleLogin,
   } = useLogin();
 
-  const handleCreateAccountClick = () => {
-    const formData = form.getValues();
-    handleCreateAccount(formData);
-    // Show the welcome modal after account creation
-    onOpen();
-  };
-
-  const handleGoHome = () => {
-    router.replace("/(tabs)");
-    // Navigate to home or main app
+  const handleCreateAccountClick = async () => {
+    const isValid = await form.trigger();
+    if (isValid) {
+      const formData = form.getValues();
+      console.log("Form data:", formData);
+      await handleCreateAccount(formData);
+    } else {
+      console.log("Form validation failed");
+    }
   };
 
   return (
@@ -77,13 +71,6 @@ export default function LoginScreen() {
           </FormProvider>
         </View>
       </KeyboardAvoidingView>
-
-      {/* Welcome Modal - Outside KeyboardAvoidingView */}
-      <WelcomeModal
-        visible={isOpen}
-        onClose={onClose}
-        onGoHome={handleGoHome}
-      />
     </SafeAreaView>
   );
 }

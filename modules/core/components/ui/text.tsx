@@ -10,7 +10,9 @@ const textVariants = cva("leading-normal", {
       neutral: "text-neutral-default",
     },
     size: {
+      sm: "text-sm",
       default: "text-base",
+      md: "text-base",
       lg: "text-lg",
       xl: "text-xl",
       xxl: "text-2xl",
