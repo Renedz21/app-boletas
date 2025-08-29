@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Gesture } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
 import type { CameraDevice } from "react-native-vision-camera";
@@ -8,7 +8,14 @@ interface UseCameraFocusZoomProps {
 }
 
 export const useCameraFocusZoom = ({ device }: UseCameraFocusZoomProps) => {
-  const [currentZoom, setCurrentZoom] = useState(1);
+  const [currentZoom, setCurrentZoom] = useState(device?.neutralZoom || 1);
+
+  // Sincronizar zoom inicial cuando el device cambie
+  useEffect(() => {
+    if (device?.neutralZoom) {
+      setCurrentZoom(device.neutralZoom);
+    }
+  }, [device]);
 
   const setZoom = useCallback(
     (zoomLevel: number) => {
