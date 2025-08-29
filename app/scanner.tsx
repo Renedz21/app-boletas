@@ -10,6 +10,7 @@ import { useScanMode } from "@/modules/core/hooks/use-scan-mode";
 import { useImagePreview } from "@/modules/core/hooks/use-image-preview";
 import { useGalleryPicker } from "@/modules/core/hooks/use-gallery-picker";
 import { useNavigation } from "@/modules/core/hooks/use-navigation";
+import { useCameraFormatForPhotos } from "@/modules/core/hooks/use-camera-format";
 
 // Components
 import { ScannerHeader } from "@/modules/core/components/scanner/scanner-header";
@@ -26,6 +27,9 @@ const cameraHeight = screenHeight * 0.7;
 export default function ScannerScreen() {
   // Camera device - debe ir primero
   const device = useCameraDevice("back");
+  
+  // Formato optimizado para fotos de alta calidad
+  const format = useCameraFormatForPhotos({ device });
 
   // Custom hooks
   const { hasPermission, requestCameraAccess } = useCameraPermission();
@@ -162,6 +166,7 @@ export default function ScannerScreen() {
                 onZoomOut={zoomOut}
                 onResetZoom={resetZoom}
                 gesture={zoomGesture}
+                format={format}
               />
             )}
           </View>

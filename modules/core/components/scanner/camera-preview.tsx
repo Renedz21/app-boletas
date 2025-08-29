@@ -17,6 +17,7 @@ interface CameraPreviewProps {
   onZoomOut: () => void;
   onResetZoom: () => void;
   gesture: any;
+  format?: any; // Formato optimizado para la cámara
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -32,6 +33,7 @@ export const CameraPreview = ({
   onZoomOut,
   onResetZoom,
   gesture,
+  format,
 }: CameraPreviewProps) => {
   if (!device || !isActive) {
     return (
@@ -51,6 +53,7 @@ export const CameraPreview = ({
           ref={camera}
           style={StyleSheet.absoluteFill}
           device={device}
+          format={format}
           isActive={true}
           photo={true}
           video={false}
@@ -58,6 +61,8 @@ export const CameraPreview = ({
           torch={flashEnabled ? "on" : "off"}
           zoom={currentZoom}
           enableZoomGesture={false}
+          photoQualityBalance="quality"
+          photoHdr={format?.supportsPhotoHdr}
         />
 
         <View className="absolute z-10">
