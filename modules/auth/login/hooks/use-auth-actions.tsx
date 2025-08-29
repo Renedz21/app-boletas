@@ -69,7 +69,6 @@ export const useAuthActions = () => {
 
   const handleCreateAccount = async (data: z.infer<typeof fullSchema>) => {
     try {
-      console.log("Attempting to create account...");
       await signUp({
         email: data.account.email,
         password: data.account.password,

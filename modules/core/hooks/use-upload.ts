@@ -130,24 +130,15 @@ export const useImageUpload = () => {
         try {
           setState({ isUploading: true, uploadProgress: 0 });
 
-          // Validate image
-          const imageInfo = await validateImage(imageUri);
-          const imageSizeKB = Math.round(imageInfo.size / 1024);
-
-
+          await validateImage(imageUri);
           setState((prev) => ({ ...prev, uploadProgress: 20 }));
 
-          // Try blob method first (more reliable)
           const result = await uploadAsBlob(imageUri);
 
           setState((prev) => ({ ...prev, uploadProgress: 100 }));
 
-          console.log("✅ Image uploaded successfully");
-
           return result;
         } catch (error) {
-          console.error(`❌ Upload attempt ${attempt} failed:`, error);
-
           if (attempt === maxRetries) {
             break;
           }

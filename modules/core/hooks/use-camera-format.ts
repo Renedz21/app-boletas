@@ -12,11 +12,7 @@ export const useCameraFormatForPhotos = ({
   device,
 }: UseCameraFormatForPhotosProps) => {
   const format = useCameraFormat(device, [
-    // Priorizar máxima resolución de foto
     { photoResolution: "max" },
-    // Asegurar resolución mínima decente para preview
-    { videoResolution: { width: 1280, height: 720 } },
-    // HDR si está disponible
     { photoHdr: true },
   ]);
 

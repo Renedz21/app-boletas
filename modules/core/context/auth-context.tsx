@@ -104,7 +104,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       });
       if (error) throw error;
     } catch (error) {
-      console.log("Error in signIn", error);
       setIsLoading(false);
       throw error;
     }
@@ -126,7 +125,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         });
         if (error) throw error;
       } catch (error) {
-        console.log("Error in signUp", error);
         setIsLoading(false);
         throw error;
       }

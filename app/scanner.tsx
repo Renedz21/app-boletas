@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { View, Dimensions, Alert } from "react-native";
+import { View, Dimensions, Alert, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { type CameraDevice, useCameraDevice } from "react-native-vision-camera";
 
@@ -21,13 +21,12 @@ import { ImagePreviewFullscreen } from "@/modules/core/components/scanner/image-
 import { CameraError } from "@/modules/core/components/scanner/camera-error";
 import AIAnalysisScreen from "./ai-analysis";
 
-const { height: screenHeight } = Dimensions.get("window");
-const cameraHeight = screenHeight * 0.7;
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
 export default function ScannerScreen() {
   // Camera device - debe ir primero
   const device = useCameraDevice("back");
-  
+
   // Formato optimizado para fotos de alta calidad
   const format = useCameraFormatForPhotos({ device });
 
@@ -43,10 +42,12 @@ export default function ScannerScreen() {
     capturePhoto,
     // Zoom controls
     currentZoom,
+    setZoom,
     zoomIn,
     zoomOut,
     resetZoom,
     zoomGesture,
+    zoomSharedValue,
   } = useCameraControls(device as CameraDevice);
   const { activeMode } = useScanMode();
   const {
@@ -142,45 +143,43 @@ export default function ScannerScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-900">
-      {/* Header */}
-      <ScannerHeader onBack={handleBack} />
+      <View
+        className="relative flex-1"
+        style={{ height: screenHeight, width: screenWidth }}
+      >
+        <View className="absolute inset-0">
+          {/* Header */}
+          <ScannerHeader onBack={handleBack} />
 
-      {/* Camera Preview Area */}
-      <View className="mb-4 px-6">
-        <View className="overflow-hidden rounded-2xl border border-gray-700 bg-gray-800">
-          <View
-            className="items-center justify-center bg-gray-900"
-            style={{ height: cameraHeight }}
-          >
-            {!hasPermission ? (
-              <PermissionRequest onRequestPermission={requestCameraAccess} />
-            ) : (
-              <CameraPreview
-                device={device}
-                camera={camera}
-                flashEnabled={flashEnabled}
-                activeMode={activeMode}
-                isActive={isCameraActive}
-                currentZoom={currentZoom}
-                onZoomIn={zoomIn}
-                onZoomOut={zoomOut}
-                onResetZoom={resetZoom}
-                gesture={zoomGesture}
-                format={format}
-              />
-            )}
-          </View>
+          {/* Camera Preview Area */}
+          {!hasPermission ? (
+            <PermissionRequest onRequestPermission={requestCameraAccess} />
+          ) : (
+            <CameraPreview
+              device={device}
+              camera={camera}
+              flashEnabled={flashEnabled}
+              activeMode={activeMode}
+              isActive={isCameraActive}
+              onSetZoom={setZoom}
+              gesture={zoomGesture}
+              format={format}
+              currentZoom={currentZoom}
+              zoomSharedValue={zoomSharedValue}
+            />
+          )}
+
+          {/* Bottom Controls */}
+          <ScannerControls
+            onCapture={handleCapture}
+            onGalleryPick={handleGalleryPick}
+            isCapturing={isCapturing}
+            flashEnabled={flashEnabled}
+            onToggleFlash={toggleFlash}
+          />
         </View>
       </View>
-
-      {/* Bottom Controls */}
-      <ScannerControls
-        onCapture={handleCapture}
-        onGalleryPick={handleGalleryPick}
-        isCapturing={isCapturing}
-        flashEnabled={flashEnabled}
-        onToggleFlash={toggleFlash}
-      />
+      <StatusBar barStyle="light-content" />
     </SafeAreaView>
   );
 }

@@ -133,16 +133,10 @@ export default function TicketsScreen() {
   );
 
   const handleOpenActionSheet = useCallback((boleta: Boleta) => {
-    // Establecer la boleta seleccionada antes de abrir el modal
     setSelectedBoleta(boleta);
 
-    // Abriendo action sheet: necesario si el bottom sheet tarda en mostrarse.
-    console.log("Presentando bottom sheet...");
-
-    // Pequeño delay para asegurar que el componente esté montado
     setTimeout(() => {
       actionSheetRef.current?.present();
-      console.log("Bottom sheet presentado");
     }, 100);
   }, []);
 
@@ -156,7 +150,7 @@ export default function TicketsScreen() {
 
   // Handlers
   const handleBoletaPress = useCallback((boleta: Boleta) => {
-    // Ver detalles: mantener en caso de cambios en el flujo de navegación.
+    // TODOs: mantener en caso de cambios en el flujo de navegación.
   }, []);
 
   const handleRefresh = useCallback(() => {

@@ -1,59 +1,70 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "@/modules/core/components/ui/text";
-import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react-native";
+import { cn } from "@/lib/utils";
 
 interface ZoomControlsProps {
-  currentZoom: number;
   minZoom: number;
   maxZoom: number;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onResetZoom: () => void;
+  currentZoom: number;
+  onSetZoom: (zoom: number) => void;
 }
 
 export const ZoomControls = ({
-  currentZoom,
   minZoom,
   maxZoom,
-  onZoomIn,
-  onZoomOut,
-  onResetZoom,
+  currentZoom,
+  onSetZoom,
 }: ZoomControlsProps) => {
-  const zoomPercentage = Math.round(
-    ((currentZoom - minZoom) / (maxZoom - minZoom)) * 100,
-  );
-
+  // Helper function to determine if a zoom level is active
+  const isZoomActive = (targetZoom: number) => {
+    return Math.abs(currentZoom - targetZoom) < 0.1; // Tolerance for floating point comparison
+  };
   return (
-    <View className="absolute inset-x-10 bottom-[15%] z-20">
-      <View className="flex-row items-center justify-between gap-4 rounded-2xl bg-black/60 p-3">
+    <View className="absolute inset-x-8 bottom-[15%]">
+      <View className="flex-row items-center justify-center gap-3 rounded-full bg-black/50 p-2">
         <TouchableOpacity
-          className="h-12 w-12 items-center justify-center rounded-full bg-white/20 active:bg-white/30"
-          onPress={onZoomIn}
-          disabled={currentZoom >= maxZoom}
+          className="h-10 w-10 items-center justify-center rounded-full border border-gray-400"
+          onPress={() => onSetZoom(1)}
         >
-          <ZoomIn size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-
-        <View className="h-12 w-12 items-center justify-center rounded-2xl bg-black/40">
-          <Text className="text-sm font-bold text-white">
-            {zoomPercentage}%
+          <Text
+            className={cn(
+              "text-sm font-bold",
+              isZoomActive(1) ? "text-yellow-400" : "text-white",
+            )}
+          >
+            1x
           </Text>
-        </View>
-
-        <TouchableOpacity
-          className="h-12 w-12 items-center justify-center rounded-full bg-white/20 active:bg-white/30"
-          onPress={onZoomOut}
-          disabled={currentZoom <= minZoom}
-        >
-          <ZoomOut size={24} color="#FFFFFF" />
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="h-12 w-12 items-center justify-center rounded-full bg-blue-600 active:bg-blue-700"
-          onPress={onResetZoom}
+          className="h-10 w-10 items-center justify-center rounded-full border border-gray-400"
+          onPress={() => onSetZoom(2)}
+          disabled={2 > maxZoom}
         >
-          <RotateCcw size={24} color="#FFFFFF" />
+          <Text
+            className={cn(
+              "text-sm font-bold",
+              isZoomActive(2) ? "text-yellow-400" : "text-white",
+            )}
+          >
+            2x
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="h-10 w-10 items-center justify-center rounded-full border border-gray-400"
+          onPress={() => onSetZoom(3)}
+          disabled={3 > maxZoom}
+        >
+          <Text
+            className={cn(
+              "text-sm font-bold",
+              isZoomActive(3) ? "text-yellow-400" : "text-white",
+            )}
+          >
+            3x
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

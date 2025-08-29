@@ -67,7 +67,24 @@ const Button = ({
         />
       )}
       {icon && icon}
-      {(title || children) && (
+      {children ? (
+        typeof children === "string" ? (
+          <Text
+            color={
+              variant === "primary"
+                ? "neutral"
+                : variant === "secondary"
+                  ? "primary"
+                  : "secondary"
+            }
+            className="text-xl font-bold"
+          >
+            {children}
+          </Text>
+        ) : (
+          children
+        )
+      ) : title ? (
         <Text
           color={
             variant === "primary"
@@ -78,9 +95,9 @@ const Button = ({
           }
           className="text-xl font-bold"
         >
-          {title || children}
+          {title}
         </Text>
-      )}
+      ) : null}
     </TouchableOpacity>
   );
 };

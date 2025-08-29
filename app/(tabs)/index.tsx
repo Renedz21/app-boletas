@@ -6,11 +6,10 @@ import {
   CameraIcon,
   FolderIcon,
   TrendingUpIcon,
-  CalendarIcon,
 } from "lucide-react-native";
 import { Text } from "@/modules/core/components/ui/text";
-import { SummaryCard } from "@/modules/dashboard/components/summary-card";
-import { StatsGrid } from "@/modules/dashboard/components/stats-grid";
+import { BentoCard } from "@/modules/dashboard/components/bento-card";
+import { BentoGrid } from "@/modules/dashboard/components/bento-grid";
 import { RecentActivity } from "@/modules/dashboard/components/recent-activity";
 import {
   Boleta,
@@ -206,18 +205,8 @@ export default function DashboardScreen() {
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Welcome Message Section */}
-          <View className="my-8 flex-col gap-2">
-            <Text size="xxl" className="font-bold leading-6 text-gray-600">
-              Bienvenido a tu panel de control personal
-            </Text>
-            <Text size="default" className="mt-1 text-gray-500">
-              Gestiona tus boletas y mantén el control de tus gastos
-            </Text>
-          </View>
-
           {/* Statistics Section */}
-          <View className="mb-8">
+          <View className="my-8">
             <View className="mb-6 flex-row items-center">
               <View className="mr-3 h-6 w-1 rounded-full bg-blue-500" />
               <Text
@@ -228,40 +217,43 @@ export default function DashboardScreen() {
                 Resumen del Mes
               </Text>
             </View>
-            <StatsGrid columns={2}>
-              <SummaryCard
-                title="Total Boletas"
-                value={recentBoletas.length.toString()}
-                subtitle="Este mes"
-                icon={<FileTextIcon size={24} color="#3B82F6" />}
-                trend={{ value: 12, isPositive: true }}
-                color="primary"
-              />
-              <SummaryCard
-                title="Gasto Total"
+            <BentoGrid>
+              {/* Fila superior - Dos cards de tamaño mediano */}
+              <View className="mb-4 flex-row gap-4">
+                <View className="flex-1">
+                  <BentoCard
+                    title="Total Boletas"
+                    value={recentBoletas.length.toString()}
+                    subtitle="Este mes"
+                    icon={<FileTextIcon size={22} color="#3B82F6" />}
+                    variant="primary"
+                    size="medium"
+                  />
+                </View>
+                <View className="flex-1">
+                  <BentoCard
+                    title="Categorías Activas"
+                    value={categories
+                      .filter((cat) => cat.activo)
+                      .length.toString()}
+                    subtitle="Disponibles"
+                    icon={<FolderIcon size={22} color="#14B8A6" />}
+                    variant="accent"
+                    size="medium"
+                  />
+                </View>
+              </View>
+
+              {/* Fila inferior - Una card ancha */}
+              <BentoCard
+                title="Gasto Total del Mes"
                 value={`S/ ${recentBoletas.reduce((sum, boleta) => sum + boleta.total, 0).toFixed(2)}`}
-                subtitle="Últimos 30 días"
+                subtitle={`Últimos 30 días • Promedio diario: S/ ${(recentBoletas.reduce((sum, boleta) => sum + boleta.total, 0) / 30).toFixed(2)}`}
                 icon={<TrendingUpIcon size={24} color="#A855F7" />}
-                trend={{ value: 8, isPositive: false }}
-                color="secondary"
+                variant="secondary"
+                size="wide"
               />
-              <SummaryCard
-                title="Categorías Activas"
-                value={categories.filter((cat) => cat.activo).length.toString()}
-                subtitle="Activas"
-                icon={<FolderIcon size={24} color="#14B8A6" />}
-                color="accent"
-              />
-              <SummaryCard
-                title="Gastos Deducibles"
-                value={recentBoletas
-                  .filter((boleta) => boleta.es_gasto_deducible)
-                  .length.toString()}
-                subtitle="Gastos deducibles"
-                icon={<CalendarIcon size={24} color="#F59E0B" />}
-                color="warning"
-              />
-            </StatsGrid>
+            </BentoGrid>
           </View>
 
           {/* Recent Activity Section */}

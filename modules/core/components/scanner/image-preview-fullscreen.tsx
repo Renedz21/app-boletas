@@ -48,7 +48,7 @@ export const ImagePreviewFullscreen = ({
             width: imageWidth,
             height: imageHeight,
           }}
-          resizeMode="contain"
+          resizeMode="cover"
         />
       </View>
 
@@ -56,20 +56,22 @@ export const ImagePreviewFullscreen = ({
       <View className="flex-row gap-4">
         <Button
           className="flex-row gap-2"
-          title="Retomar"
           variant="secondary"
           size="default"
           onPress={onRetake}
           icon={<RotateCcw size={20} color={colors.primary.default} />}
-        />
+        >
+          Retomar
+        </Button>
         <Button
           className="flex-row gap-2"
-          title="Confirmar"
           variant="primary"
           size="default"
           onPress={onConfirm}
           icon={<CircleCheck size={20} color={colors.neutral.default} />}
-        />
+        >
+          Confirmar
+        </Button>
       </View>
 
       {/* Camera icon hint */}

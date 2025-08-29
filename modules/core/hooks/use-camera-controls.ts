@@ -11,7 +11,7 @@ export const useCameraControls = (device: CameraDevice) => {
   const [isCameraActive, setIsCameraActive] = useState(true);
   const camera = useRef<CameraType>(null);
 
-  const { currentZoom, setZoom, resetZoom, zoomGesture } = useCameraFocusZoom({
+  const { currentZoom, setZoom, resetZoom, zoomGesture, zoom } = useCameraFocusZoom({
     device,
   });
 
@@ -60,9 +60,11 @@ export const useCameraControls = (device: CameraDevice) => {
     capturePhoto,
     // Zoom controls
     currentZoom,
+    setZoom,
     zoomIn,
     zoomOut,
     resetZoom,
     zoomGesture,
+    zoomSharedValue: zoom, // SharedValue para Reanimated
   };
 };

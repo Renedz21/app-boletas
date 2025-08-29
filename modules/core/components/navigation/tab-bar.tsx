@@ -93,7 +93,7 @@ const TabBar = ({ state, descriptors, navigation }: TabBarProps) => {
 
   return (
     <View
-      className="border bg-neutral-default"
+      className="border-t border-gray-100 bg-neutral-default"
       style={{ paddingBottom: insets.bottom }}
     >
       <View className="flex-row px-4 py-2">

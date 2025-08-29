@@ -8,7 +8,7 @@ interface ScannerHeaderProps {
 
 export const ScannerHeader = ({ onBack }: ScannerHeaderProps) => {
   return (
-    <View className="flex-row items-center justify-between p-6">
+    <View className="absolute left-0 top-0 z-10 p-6">
       <IconButton
         variant="ghost"
         size="lg"

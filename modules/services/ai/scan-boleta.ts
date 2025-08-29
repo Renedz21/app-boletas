@@ -32,7 +32,6 @@ export const scanBoleta = async (
   request: ScanBoletaRequest,
 ): Promise<string> => {
   try {
-    console.log("🤖 Scanning boleta...");
     const response = await openai.responses.create({
       model: "gpt-4.1-mini",
       input: [
@@ -51,7 +50,6 @@ export const scanBoleta = async (
     });
     return response.output_text;
   } catch (error) {
-    console.error(error);
     return "";
   }
 };

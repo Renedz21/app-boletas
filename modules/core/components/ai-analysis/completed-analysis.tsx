@@ -32,6 +32,12 @@ export const CompletedAnalysis = ({
         </Text>
       </View>
 
+      <View className="flex-row items-center justify-center rounded-lg bg-red-100 p-4">
+        <Text className="text-sm text-red-500">
+          Recuerda revisar la información extraída. La IA puede cometer errores.
+        </Text>
+      </View>
+
       {/* Show Supabase error if any */}
       {supabaseError && (
         <View className="rounded-lg bg-red-500/20 p-3">
@@ -43,13 +49,6 @@ export const CompletedAnalysis = ({
 
       {/* Extracted Data */}
       <ExtractedData data={data} />
-
-      <View className="flex-row items-center justify-center">
-        <Text className="text-center text-sm text-gray-400">
-          Recuerda, la IA puede cometer errores, por lo que debes revisar la
-          información extraída.
-        </Text>
-      </View>
 
       {/* Action Buttons */}
       <ActionButtons onSave={onSave} loading={loading} />

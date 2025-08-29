@@ -3,6 +3,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Text } from "@/modules/core/components/ui/text";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -30,10 +31,9 @@ export default function RegisterScreen() {
     const isValid = await form.trigger();
     if (isValid) {
       const formData = form.getValues();
-      console.log("Form data:", formData);
       await handleCreateAccount(formData);
     } else {
-      console.log("Form validation failed");
+      Alert.alert("Error", "Por favor, completa todos los campos");
     }
   };
 

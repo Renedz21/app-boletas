@@ -1,5 +1,4 @@
 import { View, TouchableOpacity } from "react-native";
-import { Camera, Dot } from "lucide-react-native";
 
 interface CaptureButtonProps {
   onCapture: () => void;
@@ -13,7 +12,7 @@ export const CaptureButton = ({
   return (
     <View className="relative">
       <TouchableOpacity
-        className="h-24 w-24 items-center justify-center rounded-full bg-white shadow-lg active:scale-95 active:bg-white"
+        className="h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg active:scale-95 active:bg-white"
         disabled={isCapturing}
         onPress={onCapture}
         style={{ elevation: 8 }}

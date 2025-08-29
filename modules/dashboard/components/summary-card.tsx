@@ -1,6 +1,5 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { ArrowUpIcon, ArrowDownIcon } from "lucide-react-native";
 import { Card } from "@/modules/core/components/ui/card";
 import { Text } from "@/modules/core/components/ui/text";
 import { cn } from "@/lib/utils";
@@ -10,12 +9,9 @@ interface SummaryCardProps {
   value: string | number;
   subtitle?: string;
   icon?: React.ReactNode;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
   color?: "primary" | "secondary" | "accent" | "success" | "warning";
   onPress?: () => void;
+  className?: string;
 }
 
 export const SummaryCard = ({
@@ -23,9 +19,9 @@ export const SummaryCard = ({
   value,
   subtitle,
   icon,
-  trend,
   color = "primary",
   onPress,
+  className,
 }: SummaryCardProps) => {
   const colorClasses = {
     primary: "bg-[#EFF6FF] border-[#DBEAFE]",
@@ -55,7 +51,7 @@ export const SummaryCard = ({
 
   return (
     <CardWrapper onPress={onPress} activeOpacity={0.9}>
-      <Card className={cn("h-44 p-6", colorClasses[color])}>
+      <Card className={cn("h-44 p-6", colorClasses[color], className)}>
         {/* Header with icon and title */}
         <View className="mb-4 flex-row items-start justify-between">
           <View className="flex-1 pr-3">
@@ -86,23 +82,6 @@ export const SummaryCard = ({
           <Text size="big" className={cn("font-bold", textColorClasses[color])}>
             {value}
           </Text>
-          {trend && (
-            <View className="flex-row items-center rounded-full bg-white/50 px-3 py-2">
-              {trend.isPositive ? (
-                <ArrowUpIcon size={14} color="#22C55E" />
-              ) : (
-                <ArrowDownIcon size={14} color="#EF4444" />
-              )}
-              <Text
-                className={cn(
-                  "ml-1 text-sm font-medium",
-                  trend.isPositive ? "text-success-500" : "text-error-500",
-                )}
-              >
-                {trend.value}%
-              </Text>
-            </View>
-          )}
         </View>
       </Card>
     </CardWrapper>

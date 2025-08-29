@@ -10,7 +10,6 @@ export const ActionButtons = ({ onSave, loading }: ActionButtonsProps) => {
   return (
     <View className="flex-row justify-center">
       <Button
-        title="Guardar"
         variant="primary"
         size="default"
         className="flex-1"

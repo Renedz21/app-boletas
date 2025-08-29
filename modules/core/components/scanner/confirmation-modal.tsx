@@ -40,8 +40,9 @@ export const ConfirmationModal = ({
               className="flex-1"
               onPress={onCancel}
               disabled={isProcessing}
-              title="Cancelar"
-            />
+            >
+              Cancelar
+            </Button>
 
             <Button
               variant="primary"
@@ -50,8 +51,9 @@ export const ConfirmationModal = ({
               onPress={onConfirm}
               disabled={isProcessing}
               loading={isProcessing}
-              title={isProcessing ? "Espera..." : "Procesar"}
-            />
+            >
+              {isProcessing ? "Espera..." : "Procesar"}
+            </Button>
           </View>
         </View>
       </View>
